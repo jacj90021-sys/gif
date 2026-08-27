@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GIF Anywhere</string>
+    <color name="black">#0A0A0A</color>
+    <color name="yellow">#FFD400</color>
+    <color name="charcoal">#161615</color>
+</resources>
