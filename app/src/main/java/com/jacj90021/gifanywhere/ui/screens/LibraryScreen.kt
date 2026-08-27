@@ -81,7 +81,7 @@ fun LibraryScreen(nav: NavController) {
             WallpaperSection(context)
             // ---- Storage ----
             StorageCard(context)
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(32.dp))  // clears the bottom nav + system gesture bar
         }
     }
 }

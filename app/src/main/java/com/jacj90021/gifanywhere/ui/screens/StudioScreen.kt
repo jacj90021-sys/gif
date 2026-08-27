@@ -60,20 +60,22 @@ fun StudioScreen(nav: NavController) {
         H1("STUDIO")
 
         // ---- Source picker row ----
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(horizontal = 20.dp),
-            modifier = Modifier.padding(top = 14.dp)
-        ) {
-            items(Content.sources.size) { i ->
-                val name = Content.sources[i]
-                SourceButton(sourceIcon(name), name) {
-                    when (name) {
-                        "URL" -> showUrlDialog = true
-                        else -> android.widget.Toast.makeText(context, "Opening $name…", android.widget.Toast.LENGTH_SHORT).show()
+        Box(Modifier.fillMaxWidth().padding(top = 14.dp)) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(horizontal = 20.dp)
+            ) {
+                items(Content.sources.size) { i ->
+                    val name = Content.sources[i]
+                    SourceButton(sourceIcon(name), name) {
+                        when (name) {
+                            "URL" -> showUrlDialog = true
+                            else -> android.widget.Toast.makeText(context, "Opening $name…", android.widget.Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
+            EdgeFade()
         }
 
         // ---- 7-tile tools grid ----
@@ -318,31 +320,32 @@ fun ExportPanel() {
             letterSpacing = 1.sp,
             modifier = Modifier.padding(top = 16.dp)
         )
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(top = 10.dp)
-        ) {
-            items(Content.platforms.size) { i ->
-                val name = Content.platforms[i]
-                val on = Store.platform == name
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(if (on) Yellow else Charcoal2)
-                        .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(20.dp))
-                        .clickableNoRipple { Store.platform = if (on) null else name }
-                        .padding(horizontal = 13.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        name,
-                        fontFamily = InterTight,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp,
-                        color = if (on) InkBlack else OffDim
-                    )
+        Box(Modifier.fillMaxWidth().padding(top = 10.dp)) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(Content.platforms.size) { i ->
+                    val name = Content.platforms[i]
+                    val on = Store.platform == name
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(if (on) Yellow else Charcoal2)
+                            .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(20.dp))
+                            .clickableNoRipple { Store.platform = if (on) null else name }
+                            .padding(horizontal = 13.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            name,
+                            fontFamily = InterTight,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp,
+                            color = if (on) InkBlack else OffDim
+                        )
+                    }
                 }
             }
+            // trailing fade signals more presets off-screen
+            EdgeFade(color = Charcoal)
         }
 
         // Colors slider: 2..256

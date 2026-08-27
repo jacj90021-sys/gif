@@ -52,7 +52,8 @@ object Store {
 
     fun load(ctx: Context) {
         val p = ctx.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-        exportFormat = p.getString("exportFormat", "GIF") ?: "GIF"
+        // GIF is the product default — never persist a stale/unknown format
+        exportFormat = p.getString("exportFormat", "GIF")?.takeIf { it in Content.formats } ?: "GIF"
         colors = p.getFloat("colors", 256f)
         fps = p.getFloat("fps", 24f)
         targetMB = p.getFloat("targetMB", 8f)

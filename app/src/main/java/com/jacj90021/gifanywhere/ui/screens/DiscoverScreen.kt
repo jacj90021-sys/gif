@@ -69,7 +69,7 @@ fun DiscoverScreen(nav: NavController) {
             columns = StaggeredGridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(11.dp),
             verticalItemSpacing = 11.dp,
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 28.dp),
             modifier = Modifier.weight(1f)
         ) {
             items(items) { entry ->

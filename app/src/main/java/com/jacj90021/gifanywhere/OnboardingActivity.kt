@@ -91,6 +91,7 @@ fun OnboardingFlow(onDone: () -> Unit) {
         Modifier
             .fillMaxSize()
             .background(InkBlack)
+            .systemBarsPadding()   // keep skip button and CTA clear of system bars
     ) {
         // Skip
         Text(

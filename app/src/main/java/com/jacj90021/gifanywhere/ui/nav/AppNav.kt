@@ -53,6 +53,7 @@ fun AppNav(startRoute: String = "discover") {
         Modifier
             .fillMaxSize()
             .background(InkBlack)
+            .statusBarsPadding()   // content starts below the status bar; black still renders behind it
     ) {
         NavHost(
             navController = nav,
@@ -92,7 +93,10 @@ private fun BottomBar(current: String, onSelect: (String) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            // background fills edge-to-edge (incl. behind the system nav bar),
+            // then the bar content is padded above the system navigation inset
             .background(Charcoal2)
+            .navigationBarsPadding()
             .border(2.dp, LineColor)
             .padding(vertical = 12.dp, horizontal = 6.dp)
     ) {

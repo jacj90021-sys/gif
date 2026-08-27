@@ -87,14 +87,25 @@ fun SearchBar(
         Text("⌕", color = Yellow, fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
         Spacer(Modifier.width(10.dp))
         if (onValueChange != null && value != null) {
-            BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
-                singleLine = true,
-                textStyle = TextStyle(fontFamily = InterTight, fontSize = 13.5.sp, color = OffWhite),
-                cursorBrush = SolidColor(Yellow),
-                modifier = Modifier.weight(1f)
-            )
+            Box(Modifier.weight(1f)) {
+                if (value.isEmpty()) {
+                    Text(
+                        hint,
+                        color = OffFaint,
+                        fontSize = 13.5.sp,
+                        fontFamily = InterTight,
+                        maxLines = 1
+                    )
+                }
+                BasicTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    singleLine = true,
+                    textStyle = TextStyle(fontFamily = InterTight, fontSize = 13.5.sp, color = OffWhite),
+                    cursorBrush = SolidColor(Yellow),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         } else {
             Text(hint, color = OffDim, fontSize = 13.5.sp, fontFamily = InterTight, modifier = Modifier.weight(1f))
         }
@@ -135,32 +146,56 @@ fun Segment(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
 
 @Composable
 fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 14.dp) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 20.dp),
-        modifier = modifier.padding(top = topPad)
-    ) {
-        items(options.size) { i ->
-            val on = i == selected
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(if (on) Yellow else Charcoal)
-                    .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(20.dp))
-                    .clickableNoRipple { onSelect(i) }
-                    .padding(horizontal = 15.dp, vertical = 9.dp)
-            ) {
-                Text(
-                    options[i],
-                    fontFamily = InterTight,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    color = if (on) InkBlack else OffWhite
-                )
+    Box(modifier = modifier.fillMaxWidth().padding(top = topPad)) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 20.dp)
+        ) {
+            items(options.size) { i ->
+                val on = i == selected
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(if (on) Yellow else Charcoal)
+                        .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(20.dp))
+                        .clickableNoRipple { onSelect(i) }
+                        .padding(horizontal = 15.dp, vertical = 9.dp)
+                ) {
+                    Text(
+                        options[i],
+                        fontFamily = InterTight,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        color = if (on) InkBlack else OffWhite
+                    )
+                }
             }
         }
+        // trailing fade signals more chips off-screen
+        EdgeFade()
     }
+}
+
+/**
+ * Gradient veil over the trailing (or leading) edge of a horizontally
+ * scrolling row so cut-off content clearly reads as scrollable.
+ * Must be inside a Box scope; pass the row's background color.
+ */
+@Composable
+fun BoxScope.EdgeFade(color: Color = InkBlack, width: Dp = 32.dp, start: Boolean = false) {
+    Box(
+        Modifier
+            .align(if (start) Alignment.CenterStart else Alignment.CenterEnd)
+            .width(width)
+            .fillMaxHeight()
+            .background(
+                Brush.horizontalGradient(
+                    colors = if (start) listOf(color, color.copy(alpha = 0f))
+                    else listOf(color.copy(alpha = 0f), color)
+                )
+            )
+    )
 }
 
 /* ---------- Slider (single value) ---------- */

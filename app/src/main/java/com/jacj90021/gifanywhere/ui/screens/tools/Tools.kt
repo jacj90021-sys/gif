@@ -663,6 +663,7 @@ private fun MergeTool(nav: NavController, context: Context) {
                 }
             }
             MonoLabel("Timeline", topPad = 18.dp, bottomPad = 8.dp)
+            Box(Modifier.fillMaxWidth()) {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 contentPadding = PaddingValues(horizontal = 20.dp)
@@ -698,6 +699,8 @@ private fun MergeTool(nav: NavController, context: Context) {
                         Text("+", fontSize = 22.sp, color = Yellow)
                     }
                 }
+            }
+                EdgeFade()
             }
             ChipRow(Content.mergeLayouts, layout, { layout = it }, topPad = 18.dp)
         }
