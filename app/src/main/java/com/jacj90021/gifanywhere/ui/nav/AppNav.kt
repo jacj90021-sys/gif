@@ -43,10 +43,10 @@ private val tabs = listOf(
 )
 
 @Composable
-fun AppNav(startRoute: String = "discover") {
+fun AppNav(routeRequest: String? = null) {
     val nav = rememberNavController()
     val backStack by nav.currentBackStackEntryAsState()
-    val route = backStack?.destination?.route ?: startRoute
+    val route = backStack?.destination?.route ?: "discover"
     val showBar = tabs.any { it.id == route }
 
     Column(
@@ -57,7 +57,7 @@ fun AppNav(startRoute: String = "discover") {
     ) {
         NavHost(
             navController = nav,
-            startDestination = startRoute.takeIf { tabs.any { t -> t.id == it } } ?: "discover",
+            startDestination = "discover",
             modifier = Modifier.weight(1f)
         ) {
             composable("discover") { DiscoverScreen(nav) }
@@ -69,9 +69,11 @@ fun AppNav(startRoute: String = "discover") {
             }
         }
 
-        // Deep link from the Floating Bubble (e.g. "tool/editor")
-        LaunchedEffect(startRoute) {
-            if (startRoute.startsWith("tool/")) nav.navigate(startRoute)
+        // Deep link from the Floating Bubble ("studio", "tool/editor", …).
+        // Fires on first composition AND whenever a new intent delivers a route.
+        LaunchedEffect(routeRequest) {
+            val target = routeRequest?.takeIf { it.isNotBlank() && it != "discover" } ?: return@LaunchedEffect
+            nav.navigate(target) { launchSingleTop = true }
         }
 
         AnimatedVisibility(visible = showBar) {

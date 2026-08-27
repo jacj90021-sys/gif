@@ -5,6 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * Single source of truth for app state. Primitives persist to SharedPreferences;
@@ -72,6 +74,36 @@ object Store {
         cacheMB = p.getFloat("cacheMB", 380f)
         favIds.clear()
         favIds.addAll(p.getStringSet("favIds", emptySet())?.mapNotNull { it.toIntOrNull() } ?: emptyList())
+
+        // Recent: replace seeds only if the user actually has history
+        runCatching {
+            val arr = JSONArray(p.getString("recentJson", "[]"))
+            if (arr.length() > 0) {
+                recent.clear()
+                for (i in 0 until arr.length()) {
+                    val o = arr.getJSONObject(i)
+                    recent.add(RecentItem(o.optString("t"), o.optInt("g")))
+                }
+            }
+        }
+        runCatching {
+            val arr = JSONArray(p.getString("creationsJson", "[]"))
+            creations.clear()
+            for (i in 0 until arr.length()) {
+                val o = arr.getJSONObject(i)
+                creations.add(Creation(o.optString("n"), o.optString("tool")))
+            }
+        }
+        runCatching {
+            val arr = JSONArray(p.getString("foldersJson", "[]"))
+            if (arr.length() > 0) {
+                folders.clear()
+                for (i in 0 until arr.length()) {
+                    val o = arr.getJSONObject(i)
+                    folders.add(Folder(o.optString("n"), o.optInt("c", 0), o.optInt("g", 0)))
+                }
+            }
+        }
     }
 
     fun save(ctx: Context) {
@@ -94,6 +126,16 @@ object Store {
         e.putString("wallTarget", wallTarget)
         e.putFloat("cacheMB", cacheMB)
         e.putStringSet("favIds", favIds.map { it.toString() }.toSet())
+        // Library content survives process death like any real app's data
+        e.putString("recentJson", JSONArray().apply {
+            recent.take(50).forEach { r -> put(JSONObject().put("t", r.title).put("g", r.gradIdx)) }
+        }.toString())
+        e.putString("creationsJson", JSONArray().apply {
+            creations.take(100).forEach { c -> put(JSONObject().put("n", c.name).put("tool", c.tool)) }
+        }.toString())
+        e.putString("foldersJson", JSONArray().apply {
+            folders.forEach { f -> put(JSONObject().put("n", f.name).put("c", f.count).put("g", f.gradIdx)) }
+        }.toString())
         e.apply()
     }
 

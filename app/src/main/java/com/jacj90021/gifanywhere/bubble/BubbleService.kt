@@ -126,10 +126,15 @@ class BubbleService : Service() {
             }
         }
 
-        wm.addView(view, params)
-        bubbleView = view
-        bubbleParams = params
-        view.alpha = Store.bubbleOpacity / 100f
+        // If overlay permission was revoked mid-session, addView throws
+        // SecurityException — degrade gracefully instead of crashing.
+        runCatching { wm.addView(view, params) }
+            .onSuccess {
+                bubbleView = view
+                bubbleParams = params
+                view.alpha = Store.bubbleOpacity / 100f
+            }
+            .onFailure { stopSelf() }
     }
 
     @SuppressLint("RtlHardcoded")

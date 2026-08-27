@@ -4,10 +4,11 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.horizontalDrag
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -475,9 +476,11 @@ fun ExportAction(
             .alpha(if (state == 1) 0.7f else 1f)
             .clickableNoRipple(enabled = state == 0) {
                 state = 1
+                // data change happens IMMEDIATELY so navigating away mid-
+                // animation can never silently drop the export
+                onExport()
                 scope.launch {
                     kotlinx.coroutines.delay(1200)
-                    onExport()
                     toast("Saved to Library")
                     state = 2
                     kotlinx.coroutines.delay(1400)
@@ -529,15 +532,17 @@ fun YellowButton(label: String, modifier: Modifier = Modifier, onClick: () -> Un
 
 /* ---------- helpers ---------- */
 
+/**
+ * Ripple-free clickable that keeps full accessibility semantics
+ * (TalkBack focus + click action) — a raw pointerInput gesture detector
+ * would be invisible to screen readers.
+ */
 fun Modifier.clickableNoRipple(enabled: Boolean = true, onClick: () -> Unit): Modifier =
     this.then(
-        Modifier.pointerInput(enabled) {
-            if (enabled) {
-                awaitEachGesture {
-                    awaitFirstDown(requireUnconsumed = false)
-                    val up = waitForUpOrCancellation()
-                    if (up != null) onClick()
-                }
-            }
-        }
+        Modifier.clickable(
+            interactionSource = MutableInteractionSource(),
+            indication = null,
+            enabled = enabled,
+            onClick = onClick
+        )
     )

@@ -87,18 +87,18 @@ fun StudioScreen(nav: NavController) {
             ToolCardBig(
                 title = "Video → GIF",
                 sub = "Trim any clip into a loop"
-            ) { nav.navigate("tool/video") }
+            ) { nav.navigate("tool/video") { launchSingleTop = true } }
             Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
-                ToolCard("boomerang", "Boomerang", Icons.Filled.PhotoCamera, Modifier.weight(1f)) { nav.navigate("tool/boomerang") }
-                ToolCard("screenrec", "Screen Rec", Icons.Filled.DesktopWindows, Modifier.weight(1f)) { nav.navigate("tool/screenrec") }
+                ToolCard("boomerang", "Boomerang", Icons.Filled.PhotoCamera, Modifier.weight(1f)) { nav.navigate("tool/boomerang") { launchSingleTop = true } }
+                ToolCard("screenrec", "Screen Rec", Icons.Filled.DesktopWindows, Modifier.weight(1f)) { nav.navigate("tool/screenrec") { launchSingleTop = true } }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
-                ToolCard("editor", "GIF Editor", Icons.Filled.Edit, Modifier.weight(1f)) { nav.navigate("tool/editor") }
-                ToolCard("meme", "Meme Maker", Icons.Filled.Create, Modifier.weight(1f)) { nav.navigate("tool/meme") }
+                ToolCard("editor", "GIF Editor", Icons.Filled.Edit, Modifier.weight(1f)) { nav.navigate("tool/editor") { launchSingleTop = true } }
+                ToolCard("meme", "Meme Maker", Icons.Filled.Create, Modifier.weight(1f)) { nav.navigate("tool/meme") { launchSingleTop = true } }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
-                ToolCard("sticker", "Sticker Maker", Icons.Filled.Favorite, Modifier.weight(1f)) { nav.navigate("tool/sticker") }
-                ToolCard("merge", "Merge / Combine", Icons.Filled.AccountTree, Modifier.weight(1f)) { nav.navigate("tool/merge") }
+                ToolCard("sticker", "Sticker Maker", Icons.Filled.Favorite, Modifier.weight(1f)) { nav.navigate("tool/sticker") { launchSingleTop = true } }
+                ToolCard("merge", "Merge / Combine", Icons.Filled.AccountTree, Modifier.weight(1f)) { nav.navigate("tool/merge") { launchSingleTop = true } }
             }
         }
 

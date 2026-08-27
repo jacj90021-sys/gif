@@ -40,7 +40,9 @@ fun DiscoverScreen(nav: NavController) {
     var category by rememberSaveable { mutableStateOf(0) }
     var listSeg by rememberSaveable { mutableStateOf(0) }
     var query by rememberSaveable { mutableStateOf("") }
-    var sheetItem by remember { mutableStateOf<GifItem?>(null) }
+    // id-based so the open sheet survives rotation / process recreation
+    var sheetItemId by rememberSaveable { mutableStateOf<Int?>(null) }
+    val sheetItem = sheetItemId?.let { id -> Content.gifs.firstOrNull { it.id == id } }
 
     Column(Modifier.fillMaxSize().background(InkBlack)) {
         H1("DISCOVER")
@@ -74,8 +76,10 @@ fun DiscoverScreen(nav: NavController) {
         ) {
             items(items) { entry ->
                 when (entry) {
-                    is GifItem -> GifCard(entry) { sheetItem = entry }
-                    is RecentView -> RecentCard(entry) { sheetItem = Content.gifs.firstOrNull { it.title == entry.title } ?: Content.gifs[0] }
+                    is GifItem -> GifCard(entry) { sheetItemId = entry.id }
+                    is RecentView -> RecentCard(entry) {
+                        sheetItemId = (Content.gifs.firstOrNull { it.title == entry.title } ?: Content.gifs[0]).id
+                    }
                 }
             }
             if (items.isEmpty()) {
@@ -100,7 +104,7 @@ fun DiscoverScreen(nav: NavController) {
     }
 
     sheetItem?.let { item ->
-        ActionSheet(item = item, onDismiss = { sheetItem = null }, nav = nav)
+        ActionSheet(item = item, onDismiss = { sheetItemId = null }, nav = nav)
     }
 }
 

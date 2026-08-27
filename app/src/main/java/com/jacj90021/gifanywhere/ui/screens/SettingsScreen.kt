@@ -106,8 +106,7 @@ fun SettingsScreen(nav: NavController) {
                     onClick = {
                         val options = listOf(100, 90, 80, 70)
                         Store.bubbleOpacity = options[(options.indexOf(Store.bubbleOpacity) + 1) % options.size]
-                        // apply live to a running service
-                        context.stopService(Intent(context, BubbleService::class.java))
+                        // the service applies opacity in onStartCommand — no restart flash
                         context.startService(Intent(context, BubbleService::class.java))
                     }
                 )
