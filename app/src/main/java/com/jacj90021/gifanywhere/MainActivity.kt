@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +18,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // Classic professional layout: the app sits BETWEEN the system bars —
+        // the status bar stays an opaque system-owned strip (theme: black),
+        // the nav bar a system-owned strip (theme: charcoal). The app does
+        // NOT draw edge-to-edge over them. The Compose inset padding in the
+        // UI stays as a safety net; it no-ops when the window isn't fullbleed.
         // Launch onboarding only on a FRESH creation — never on rotation
         // (which recreates the activity and used to stack a duplicate intent),
         // and never once it has been completed.

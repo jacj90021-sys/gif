@@ -41,6 +41,14 @@ android {
     buildFeatures {
         compose = true
     }
+
+    // Professional APK naming in CI artifacts: GIF-Anywhere-<version>.apk
+    applicationVariants.all {
+        outputs.all {
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl)
+                .outputFileName = "GIF-Anywhere-${versionName}.apk"
+        }
+    }
 }
 
 dependencies {
