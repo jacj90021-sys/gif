@@ -350,7 +350,7 @@ private fun EditorTool(nav: NavController) {
                     .fillMaxWidth()
             ) {
                 Content.editorTools.subList(0, 4).forEachIndexed { i, name ->
-                    EditorCell(i, name, tool == i) { tool = if (tool == i) -1 else i }
+                    EditorCell(i, name, tool == i, Modifier.weight(1f)) { tool = if (tool == i) -1 else i }
                 }
             }
             Row(
@@ -360,7 +360,7 @@ private fun EditorTool(nav: NavController) {
                     .fillMaxWidth()
             ) {
                 Content.editorTools.subList(4, 8).forEachIndexed { i, name ->
-                    EditorCell(i + 4, name, tool == i + 4) { tool = if (tool == i + 4) -1 else i + 4 }
+                    EditorCell(i + 4, name, tool == i + 4, Modifier.weight(1f)) { tool = if (tool == i + 4) -1 else i + 4 }
                 }
             }
 
@@ -412,11 +412,10 @@ private fun EditorTool(nav: NavController) {
 }
 
 @Composable
-private fun EditorCell(index: Int, name: String, selected: Boolean, onClick: () -> Unit) {
+private fun EditorCell(index: Int, name: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .weight(1f)
+        modifier = modifier
             .clickableNoRipple { onClick() }
     ) {
         Box(

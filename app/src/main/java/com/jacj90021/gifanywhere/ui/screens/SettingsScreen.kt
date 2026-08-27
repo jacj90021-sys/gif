@@ -28,6 +28,7 @@ import com.jacj90021.gifanywhere.ui.theme.*
 @Composable
 fun SettingsScreen(nav: NavController) {
     val context = LocalContext.current
+    var showAbout by remember { mutableStateOf(false) }
 
     // Keyboard enabled state — refreshed whenever the screen resumes
     val imm = context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -144,7 +145,6 @@ fun SettingsScreen(nav: NavController) {
         MonoLabel("General")
         val themes = listOf("Dark", "AMOLED")
         val languages = listOf("English", "Español", "Français")
-        var showAbout by remember { mutableStateOf(false) }
         SettingsCard {
             SettingsRow(
                 title = "Theme",

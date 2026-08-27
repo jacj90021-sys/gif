@@ -1,6 +1,6 @@
 package com.jacj90021.gifanywhere.ui.components
 
-import androidx.compose.animation.animateDpAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -477,7 +477,7 @@ fun GradientBox(gradIdx: Int, modifier: Modifier = Modifier, corner: Dp = 0.dp, 
 /* ---------- plain yellow action button ---------- */
 
 @Composable
-fun YellowButton(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun YellowButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier

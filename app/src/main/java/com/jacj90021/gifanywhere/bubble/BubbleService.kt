@@ -15,7 +15,6 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.ValueAnimator
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -138,14 +137,8 @@ class BubbleService : Service() {
         val screenW = resources.displayMetrics.widthPixels
         val target = if (params.x + dp(29) < screenW / 2) dp(12)
         else screenW - dp(58) - dp(12)
-        ValueAnimator.ofInt(params.x, target).apply {
-            duration = 220
-            addUpdateListener {
-                params.x = it.animatedValue as Int
-                runCatching { wm.updateViewLayout(v, params) }
-            }
-            start()
-        }
+        params.x = target
+        runCatching { wm.updateViewLayout(v, params) }
         lastX = target
         lastY = params.y
         Store.bubbleSide = if (target < screenW / 2) "Left" else "Right"

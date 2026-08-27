@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DesktopWindows
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Link
@@ -103,13 +104,14 @@ fun StudioScreen(nav: NavController) {
 
         ExportAction(
             label = "EXPORT ${Store.exportFormat} →",
-            toast = { msg -> android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show() }
-        ) {
-            val stamp = SimpleDateFormat("HHmmss", Locale.US).format(Date())
-            val name = "export_$stamp.${Store.exportFormat.lowercase()}"
-            Store.creations.add(0, Creation(name, "Studio"))
-            Store.recent.add(0, RecentItem(name, (Store.creations.size) % Content.grads.size))
-        }
+            toast = { msg -> android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show() },
+            onExport = {
+                val stamp = SimpleDateFormat("HHmmss", Locale.US).format(Date())
+                val name = "export_$stamp.${Store.exportFormat.lowercase()}"
+                Store.creations.add(0, Creation(name, "Studio"))
+                Store.recent.add(0, RecentItem(name, (Store.creations.size) % Content.grads.size))
+            }
+        )
     }
 
     if (showUrlDialog) {
