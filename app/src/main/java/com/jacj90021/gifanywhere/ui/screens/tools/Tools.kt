@@ -1,5 +1,10 @@
 package com.jacj90021.gifanywhere.ui.screens.tools
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -137,6 +143,12 @@ private fun VideoToGifTool(nav: NavController) {
 @Composable
 private fun BoomerangTool(nav: NavController, context: Context) {
     var recording by rememberSaveable { mutableStateOf(false) }
+    val pulse = rememberInfiniteTransition(label = "recPulse")
+    val pulseAlpha by pulse.animateFloat(
+        0.65f, 1f,
+        infiniteRepeatable(tween(500), RepeatMode.Reverse),
+        label = "recAlpha"
+    )
     ToolScaffold("BOOMERANG", nav) {
         Box(
             contentAlignment = Alignment.Center,
@@ -202,6 +214,7 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                     .clip(CircleShape)
                     .background(if (recording) RecRed else Yellow)
                     .border(5.dp, Charcoal2, CircleShape)
+                    .then(if (recording) Modifier.alpha(pulseAlpha) else Modifier)
                     .clickableNoRipple {
                         if (!recording) {
                             recording = true
@@ -249,6 +262,12 @@ private fun ScreenRecTool(nav: NavController, context: Context) {
     var durIdx by rememberSaveable { mutableStateOf(0) }
     var recording by rememberSaveable { mutableStateOf(false) }
     var elapsed by remember { mutableStateOf(0) }
+    val pulse = rememberInfiniteTransition(label = "recPulse")
+    val pulseAlpha by pulse.animateFloat(
+        0.5f, 1f,
+        infiniteRepeatable(tween(500), RepeatMode.Reverse),
+        label = "recAlpha"
+    )
 
     LaunchedEffect(recording, durIdx) {
         if (recording) {
@@ -280,7 +299,8 @@ private fun ScreenRecTool(nav: NavController, context: Context) {
                 else "TAP TO START — AUTO-CONVERTS TO GIF",
                 fontFamily = Mono,
                 fontSize = 12.sp,
-                color = if (recording) RecRed else OffFaint
+                color = if (recording) RecRed else OffFaint,
+                modifier = if (recording) Modifier.alpha(pulseAlpha) else Modifier
             )
             Box(
                 contentAlignment = Alignment.Center,

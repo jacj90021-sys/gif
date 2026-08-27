@@ -6,6 +6,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -33,15 +39,23 @@ fun LibraryScreen(nav: NavController) {
     var seg by rememberSaveable { mutableStateOf(0) }
 
     Column(Modifier.fillMaxSize().background(InkBlack)) {
-        H1("LIBRARY")
+        H1("LIBRARY", eyebrow = "GIF Anywhere")
         Segment(listOf("Favorites", "Recent", "Creations"), seg, { seg = it }, topPad = 12.dp)
 
-        Column(
-            Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
-            when (seg) {
+        AnimatedContent(
+            targetState = seg,
+            modifier = Modifier.weight(1f),
+            transitionSpec = {
+                (fadeIn(tween(200)) + slideInVertically(tween(240)) { it / 22 })
+                    .togetherWith(fadeOut(tween(120)))
+            },
+            label = "librarySegment"
+        ) { currentSeg ->
+            Column(
+                Modifier
+                    .verticalScroll(rememberScrollState())
+            ) {
+                when (currentSeg) {
                 0 -> {
                     if (Store.folders.isEmpty()) {
                         EmptyState(
@@ -82,6 +96,7 @@ fun LibraryScreen(nav: NavController) {
             // ---- Storage ----
             StorageCard(context)
             Spacer(Modifier.height(32.dp))  // clears the bottom nav + system gesture bar
+            }
         }
     }
 }

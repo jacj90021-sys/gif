@@ -1,7 +1,14 @@
 package com.jacj90021.gifanywhere.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,6 +16,8 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.horizontalDrag
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -20,16 +29,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jacj90021.gifanywhere.data.Content
@@ -39,15 +52,52 @@ import kotlinx.coroutines.launch
 /* ---------- Header ---------- */
 
 @Composable
-fun H1(text: String, size: TextUnit = 30.sp, topPad: Dp = 14.dp, hPad: Dp = 20.dp, bottomPad: Dp = 0.dp) {
-    Text(
-        text = text + ".",
-        fontFamily = Lilita,
-        fontSize = size,
-        letterSpacing = 0.3.sp,
-        color = OffWhite,
-        modifier = Modifier.padding(start = hPad, end = hPad, top = topPad, bottom = bottomPad)
+fun H1(
+    text: String,
+    size: TextUnit = 30.sp,
+    topPad: Dp = 14.dp,
+    hPad: Dp = 20.dp,
+    bottomPad: Dp = 0.dp,
+    eyebrow: String? = null
+) {
+    Column(Modifier.padding(start = hPad, end = hPad, top = topPad, bottom = bottomPad)) {
+        if (eyebrow != null) {
+            Text(
+                eyebrow.uppercase(),
+                fontFamily = Mono,
+                fontWeight = FontWeight.Bold,
+                fontSize = 8.5.sp,
+                letterSpacing = 2.sp,
+                color = Yellow
+            )
+            Spacer(Modifier.height(3.dp))
+        }
+        Text(
+            text = text + ".",
+            fontFamily = Lilita,
+            fontSize = size,
+            letterSpacing = 0.3.sp,
+            color = OffWhite
+        )
+    }
+}
+
+/**
+ * Press feedback: spring scale-down while pressed, full accessibility
+ * semantics, no ripple (the dark design language uses scale, not ripple).
+ */
+@Composable
+fun Modifier.pressable(enabled: Boolean = true, pressedScale: Float = 0.97f, onClick: () -> Unit): Modifier {
+    val source = remember { MutableInteractionSource() }
+    val pressed by source.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) pressedScale else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow, dampingRatio = Spring.DampingRatioMediumBouncy),
+        label = "pressScale"
     )
+    return this
+        .scale(scale)
+        .clickable(interactionSource = source, indication = null, enabled = enabled, onClick = onClick)
 }
 
 @Composable
@@ -75,13 +125,16 @@ fun SearchBar(
     hPad: Dp = 20.dp,
     modifier: Modifier = Modifier
 ) {
+    val focusSource = remember { MutableInteractionSource() }
+    val focused by focusSource.collectIsFocusedAsState()
+    val borderColor by animateColorAsState(if (focused) Yellow else LineColor, tween(200), label = "searchBorder")
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .padding(start = hPad, end = hPad, top = topPad)
             .clip(RoundedCornerShape(16.dp))
             .background(Charcoal)
-            .border(2.dp, LineColor, RoundedCornerShape(16.dp))
+            .border(2.dp, borderColor, RoundedCornerShape(16.dp))
             .clickableNoRipple { onClick?.invoke() }
             .padding(horizontal = 16.dp, vertical = 13.dp)
     ) {
@@ -104,6 +157,7 @@ fun SearchBar(
                     singleLine = true,
                     textStyle = TextStyle(fontFamily = InterTight, fontSize = 13.5.sp, color = OffWhite),
                     cursorBrush = SolidColor(Yellow),
+                    interactionSource = focusSource,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -125,18 +179,21 @@ fun Segment(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
             .padding(4.dp)
     ) {
         options.forEachIndexed { i, opt ->
+            val on = i == selected
+            val bg by animateColorAsState(if (on) Yellow else Color.Transparent, tween(180), label = "segBg")
+            val fg by animateColorAsState(if (on) InkBlack else OffDim, tween(180), label = "segFg")
             Text(
                 text = opt,
                 fontFamily = InterTight,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.5.sp,
-                color = if (i == selected) InkBlack else OffDim,
+                color = fg,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(11.dp))
-                    .background(if (i == selected) Yellow else Color.Transparent)
-                    .clickableNoRipple { onSelect(i) }
+                    .background(bg)
+                    .pressable { onSelect(i) }
                     .padding(vertical = 9.dp)
             )
         }
@@ -154,13 +211,16 @@ fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
         ) {
             items(options.size) { i ->
                 val on = i == selected
+                val bg by animateColorAsState(if (on) Yellow else Charcoal, tween(180), label = "chipBg")
+                val fg by animateColorAsState(if (on) InkBlack else OffWhite, tween(180), label = "chipFg")
+                val border by animateColorAsState(if (on) Yellow else LineColor, tween(180), label = "chipBorder")
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
-                        .background(if (on) Yellow else Charcoal)
-                        .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(20.dp))
-                        .clickableNoRipple { onSelect(i) }
+                        .background(bg)
+                        .border(2.dp, border, RoundedCornerShape(20.dp))
+                        .pressable { onSelect(i) }
                         .padding(horizontal = 15.dp, vertical = 9.dp)
                 ) {
                     Text(
@@ -168,7 +228,7 @@ fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
                         fontFamily = InterTight,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
-                        color = if (on) InkBlack else OffWhite
+                        color = fg
                     )
                 }
             }
@@ -242,10 +302,17 @@ fun GifSlider(progress: Float, onProgress: (Float) -> Unit, modifier: Modifier =
         )
         val density = LocalDensity.current
         val handleX = with(density) { (width.toPx() * progress.coerceIn(0f, 1f)).toDp() } - 8.dp
+        var dragging by remember { mutableStateOf(false) }
+        val handleScale by animateFloatAsState(
+            targetValue = if (dragging) 1.35f else 1f,
+            animationSpec = spring(stiffness = Spring.StiffnessMedium),
+            label = "handleScale"
+        )
         Box(
             Modifier
                 .offset(x = handleX)
                 .align(Alignment.CenterStart)
+                .scale(handleScale)
                 .size(16.dp)
                 .clip(CircleShape)
                 .background(Yellow)
@@ -257,10 +324,12 @@ fun GifSlider(progress: Float, onProgress: (Float) -> Unit, modifier: Modifier =
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         val down = awaitFirstDown()
+                        dragging = true
                         onProgress((down.position.x / size.width).coerceIn(0f, 1f))
                         horizontalDrag(down.id) { change ->
                             onProgress((change.position.x / size.width).coerceIn(0f, 1f))
                         }
+                        dragging = false
                     }
                 }
         )
@@ -349,24 +418,31 @@ fun TrimSlider(start: Float, end: Float, onChange: (Float, Float) -> Unit, modif
 fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
     val knobOffset by animateDpAsState(
         targetValue = if (checked) 19.dp else 2.dp,
-        animationSpec = tween(150),
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow, dampingRatio = Spring.DampingRatioMediumBouncy),
         label = "toggleKnob"
     )
+    val haptics = LocalHapticFeedback.current
+    val bg by animateColorAsState(if (checked) Yellow else Charcoal2, tween(180), label = "tBg")
+    val border by animateColorAsState(if (checked) Yellow else LineColor, tween(180), label = "tBorder")
+    val knob by animateColorAsState(if (checked) InkBlack else OffFaint, tween(180), label = "tKnob")
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .size(width = 42.dp, height = 25.dp)
             .clip(RoundedCornerShape(13.dp))
-            .background(if (checked) Yellow else Charcoal2)
-            .border(2.dp, if (checked) Yellow else LineColor, RoundedCornerShape(13.dp))
-            .clickableNoRipple { onChange(!checked) }
+            .background(bg)
+            .border(2.dp, border, RoundedCornerShape(13.dp))
+            .clickableNoRipple {
+                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                onChange(!checked)
+            }
     ) {
         Box(
             Modifier
                 .offset(x = knobOffset)
                 .size(17.dp)
                 .clip(CircleShape)
-                .background(if (checked) InkBlack else OffFaint)
+                .background(knob)
         )
     }
 }
@@ -375,11 +451,12 @@ fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
 
 @Composable
 fun StatusPill(active: Boolean, text: String, onClick: (() -> Unit)? = null) {
+    val bg by animateColorAsState(if (active) Yellow else Charcoal2, tween(200), label = "pillBg")
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(if (active) Yellow else Charcoal2)
+            .background(bg)
             .then(if (active) Modifier else Modifier.border(1.dp, LineColor, RoundedCornerShape(20.dp)))
             .clickableNoRipple { onClick?.invoke() }
             .padding(horizontal = 9.dp, vertical = 4.dp)
@@ -461,6 +538,14 @@ fun ExportAction(
 ) {
     var state by remember { mutableStateOf(0) } // 0 idle, 1 exporting, 2 done
     val scope = rememberCoroutineScope()
+    val haptics = LocalHapticFeedback.current
+    val progress = remember { Animatable(0f) }
+    LaunchedEffect(state) {
+        if (state == 1) {
+            progress.snapTo(0f)
+            progress.animateTo(1f, tween(1200))
+        }
+    }
     val shown = when (state) {
         0 -> label
         1 -> "EXPORTING..."
@@ -472,9 +557,9 @@ fun ExportAction(
             .padding(start = 20.dp, end = 20.dp, top = 18.dp, bottom = 22.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Yellow)
-            .alpha(if (state == 1) 0.7f else 1f)
-            .clickableNoRipple(enabled = state == 0) {
+            .background(Brush.linearGradient(listOf(Yellow, YellowDeep)))
+            .pressable(enabled = state == 0) {
+                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 state = 1
                 // data change happens IMMEDIATELY so navigating away mid-
                 // animation can never silently drop the export
@@ -489,6 +574,15 @@ fun ExportAction(
             }
             .padding(vertical = 16.dp)
     ) {
+        if (state == 1) {
+            Box(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(progress.value)
+                    .height(3.dp)
+                    .background(InkBlack.copy(alpha = 0.25f))
+            )
+        }
         Text(shown, fontFamily = Lilita, fontSize = 16.sp, letterSpacing = 0.3.sp, color = InkBlack)
     }
 }
@@ -522,8 +616,8 @@ fun YellowButton(label: String, modifier: Modifier = Modifier, onClick: () -> Un
             .padding(start = 20.dp, end = 20.dp, top = 18.dp, bottom = 22.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Yellow)
-            .clickableNoRipple { onClick() }
+            .background(Brush.linearGradient(listOf(Yellow, YellowDeep)))
+            .pressable { onClick() }
             .padding(vertical = 16.dp)
     ) {
         Text(label, fontFamily = Lilita, fontSize = 16.sp, letterSpacing = 0.3.sp, color = InkBlack)

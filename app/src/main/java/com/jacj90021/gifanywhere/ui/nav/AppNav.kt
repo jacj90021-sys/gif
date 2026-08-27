@@ -1,6 +1,16 @@
 package com.jacj90021.gifanywhere.ui.nav
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -16,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,7 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.jacj90021.gifanywhere.ui.components.clickableNoRipple
+import com.jacj90021.gifanywhere.ui.components.pressable
 import com.jacj90021.gifanywhere.ui.screens.DiscoverScreen
 import com.jacj90021.gifanywhere.ui.screens.LibraryScreen
 import com.jacj90021.gifanywhere.ui.screens.SettingsScreen
@@ -58,13 +69,27 @@ fun AppNav(routeRequest: String? = null) {
         NavHost(
             navController = nav,
             startDestination = "discover",
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            // Motion system: tabs cross-fade with a soft zoom; tool screens
+            // slide up like modals and slide back down on close.
+            enterTransition = { fadeIn(tween(200)) + scaleIn(initialScale = 0.97f, animationSpec = tween(200)) },
+            exitTransition = { fadeOut(tween(140)) },
+            popEnterTransition = { fadeIn(tween(200)) },
+            popExitTransition = { fadeOut(tween(140)) }
         ) {
             composable("discover") { DiscoverScreen(nav) }
             composable("studio") { StudioScreen(nav) }
             composable("library") { LibraryScreen(nav) }
             composable("settings") { SettingsScreen(nav) }
-            composable("tool/{tool}") { entry ->
+            composable(
+                "tool/{tool}",
+                enterTransition = {
+                    slideInVertically(tween(260)) { it / 6 } + fadeIn(tween(260))
+                },
+                popExitTransition = {
+                    slideOutVertically(tween(220)) { it / 6 } + fadeOut(tween(220))
+                }
+            ) { entry ->
                 ToolScreen(nav, entry.arguments?.getString("tool") ?: "video")
             }
         }
@@ -104,27 +129,40 @@ private fun BottomBar(current: String, onSelect: (String) -> Unit) {
     ) {
         tabs.forEach { tab ->
             val active = tab.id == current
+            val pillColor by animateColorAsState(
+                if (active) Yellow else androidx.compose.ui.graphics.Color.Transparent,
+                tween(200), label = "pill"
+            )
+            val iconColor by animateColorAsState(
+                if (active) InkBlack else OffFaint,
+                tween(200), label = "tabIcon"
+            )
+            val iconScale by animateFloatAsState(
+                targetValue = if (active) 1.1f else 1f,
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow, dampingRatio = Spring.DampingRatioMediumBouncy),
+                label = "tabScale"
+            )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .clip(RoundedCornerShape(14.dp))
-                    .background(if (active) Yellow else androidx.compose.ui.graphics.Color.Transparent)
-                    .clickableNoRipple { onSelect(tab.id) }
+                    .background(pillColor)
+                    .pressable { onSelect(tab.id) }
                     .padding(horizontal = 10.dp, vertical = 6.dp)
             ) {
                 Icon(
                     tab.icon,
                     contentDescription = tab.label,
-                    tint = if (active) InkBlack else OffFaint,
-                    modifier = Modifier.size(21.dp)
+                    tint = iconColor,
+                    modifier = Modifier.size(21.dp).scale(iconScale)
                 )
                 Text(
                     tab.label,
                     fontFamily = Mono,
                     fontWeight = if (active) FontWeight.ExtraBold else FontWeight.Bold,
                     fontSize = 9.5.sp,
-                    color = if (active) InkBlack else OffFaint,
+                    color = iconColor,
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }

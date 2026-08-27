@@ -18,10 +18,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -45,7 +47,7 @@ fun DiscoverScreen(nav: NavController) {
     val sheetItem = sheetItemId?.let { id -> Content.gifs.firstOrNull { it.id == id } }
 
     Column(Modifier.fillMaxSize().background(InkBlack)) {
-        H1("DISCOVER")
+        H1("DISCOVER", eyebrow = "GIF Anywhere")
         SearchBar(
             hint = "Search GIFs, stickers, memes...",
             value = query,
@@ -75,10 +77,12 @@ fun DiscoverScreen(nav: NavController) {
             modifier = Modifier.weight(1f)
         ) {
             items(items) { entry ->
-                when (entry) {
-                    is GifItem -> GifCard(entry) { sheetItemId = entry.id }
-                    is RecentView -> RecentCard(entry) {
-                        sheetItemId = (Content.gifs.firstOrNull { it.title == entry.title } ?: Content.gifs[0]).id
+                Box(Modifier.animateItem()) {
+                    when (entry) {
+                        is GifItem -> GifCard(entry) { sheetItemId = entry.id }
+                        is RecentView -> RecentCard(entry) {
+                            sheetItemId = (Content.gifs.firstOrNull { it.title == entry.title } ?: Content.gifs[0]).id
+                        }
                     }
                 }
             }
@@ -111,6 +115,28 @@ fun DiscoverScreen(nav: NavController) {
 @Composable
 private fun GifCard(item: GifItem, onClick: () -> Unit) {
     GradientBox(item.gradIdx, Modifier.fillMaxWidth().height(item.heightDp.dp).clip(RoundedCornerShape(16.dp)).clickableNoRipple { onClick() }) {
+        // bottom scrim so the caption stays readable over any thumbnail
+        Box(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(46.dp)
+                .background(
+                    Brush.verticalGradient(listOf(Color.Transparent, Color(0xB3000000)))
+                )
+        )
+        Text(
+            item.title,
+            fontFamily = InterTight,
+            fontWeight = FontWeight.Bold,
+            fontSize = 10.sp,
+            color = OffWhite,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 10.dp, bottom = 8.dp, end = 44.dp)
+        )
         LoopBadge(Modifier.align(Alignment.TopEnd).padding(8.dp))
     }
 }
@@ -118,6 +144,27 @@ private fun GifCard(item: GifItem, onClick: () -> Unit) {
 @Composable
 private fun RecentCard(item: RecentView, onClick: () -> Unit) {
     GradientBox(item.gradIdx, Modifier.fillMaxWidth().height(item.heightDp.dp).clip(RoundedCornerShape(16.dp)).clickableNoRipple { onClick() }) {
+        Box(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(46.dp)
+                .background(
+                    Brush.verticalGradient(listOf(Color.Transparent, Color(0xB3000000)))
+                )
+        )
+        Text(
+            item.title,
+            fontFamily = InterTight,
+            fontWeight = FontWeight.Bold,
+            fontSize = 10.sp,
+            color = OffWhite,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 10.dp, bottom = 8.dp, end = 44.dp)
+        )
         LoopBadge(Modifier.align(Alignment.TopEnd).padding(8.dp))
     }
 }

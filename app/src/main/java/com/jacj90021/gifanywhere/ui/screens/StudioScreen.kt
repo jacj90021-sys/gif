@@ -57,7 +57,7 @@ fun StudioScreen(nav: NavController) {
             .background(InkBlack)
             .verticalScroll(rememberScrollState())
     ) {
-        H1("STUDIO")
+        H1("STUDIO", eyebrow = "GIF Anywhere")
 
         // ---- Source picker row ----
         Box(Modifier.fillMaxWidth().padding(top = 14.dp)) {
@@ -212,8 +212,10 @@ private fun ToolCardBig(title: String, sub: String, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
-            .background(Yellow)
-            .clickableNoRipple { onClick() }
+            .background(
+                androidx.compose.ui.graphics.Brush.linearGradient(listOf(Yellow, YellowDeep))
+            )
+            .pressable { onClick() }
             .padding(16.dp)
     ) {
         Box(
@@ -239,7 +241,7 @@ private fun ToolCard(id: String, title: String, icon: ImageVector, modifier: Mod
             .clip(RoundedCornerShape(18.dp))
             .background(Charcoal)
             .border(2.dp, LineColor, RoundedCornerShape(18.dp))
-            .clickableNoRipple { onClick() }
+            .pressable { onClick() }
             .padding(16.dp)
     ) {
         Box(

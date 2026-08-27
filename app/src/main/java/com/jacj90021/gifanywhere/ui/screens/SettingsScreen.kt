@@ -52,7 +52,7 @@ fun SettingsScreen(nav: NavController) {
             .background(InkBlack)
             .verticalScroll(rememberScrollState())
     ) {
-        H1("SETTINGS")
+        H1("SETTINGS", eyebrow = "GIF Anywhere")
 
         // ---- Delivery ----
         MonoLabel("Delivery", topPad = 8.dp)
