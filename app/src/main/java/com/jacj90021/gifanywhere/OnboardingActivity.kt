@@ -19,8 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
@@ -119,9 +117,9 @@ fun OnboardingFlow(onDone: () -> Unit) {
                     modifier = Modifier
                         .size(220.dp)
                         .clip(RoundedCornerShape(28.dp))
-                        .background(
-                            Brush.linearGradient(listOf(Yellow, Color(0xFFC9A300)))
-                        )
+                        .background(CardWhite)
+                        .hardShadow(3.dp)
+                        .border(2.dp, InkBlack, RoundedCornerShape(28.dp))
                 ) {
                     Text("G", fontFamily = Lilita, fontSize = 80.sp, color = InkBlack)
                 }
@@ -194,9 +192,9 @@ fun OnboardingFlow(onDone: () -> Unit) {
                 .align(Alignment.BottomCenter)
                 .padding(start = 30.dp, end = 30.dp, bottom = 40.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(Yellow)
-                .border(2.dp, Yellow, RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(12.dp))
+                .background(InkBlack)
+                .hardShadow(3.dp, CardWhite)
                 .clickableNoRipple {
                     when (page) {
                         0 -> scope.launch { pagerState.animateScrollToPage(1) }
@@ -218,7 +216,7 @@ fun OnboardingFlow(onDone: () -> Unit) {
                 }
                 .padding(vertical = 16.dp)
         ) {
-            Text(label, fontFamily = Lilita, fontSize = 15.sp, color = InkBlack)
+            Text(label, fontFamily = Lilita, fontSize = 15.sp, color = BgYellow)
         }
     }
 }

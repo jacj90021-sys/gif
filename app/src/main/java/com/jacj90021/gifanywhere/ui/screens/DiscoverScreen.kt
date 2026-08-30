@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -18,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +33,8 @@ import com.jacj90021.gifanywhere.data.RecentItem
 import com.jacj90021.gifanywhere.data.Store
 import com.jacj90021.gifanywhere.ui.components.*
 import com.jacj90021.gifanywhere.ui.theme.*
-import com.jacj90021.gifanywhere.R
+
+/** Mockup DISCOVER screen: search, segments, chips, masonry + action sheet. */
 @Composable
 fun DiscoverScreen(nav: NavController) {
     val context = LocalContext.current
@@ -39,21 +42,22 @@ fun DiscoverScreen(nav: NavController) {
     var category by rememberSaveable { mutableStateOf(0) }
     var listSeg by rememberSaveable { mutableStateOf(0) }
     var query by rememberSaveable { mutableStateOf("") }
-    // id-based so the open sheet survives rotation / process recreation
     var sheetItemId by rememberSaveable { mutableStateOf<Int?>(null) }
     val sheetItem = sheetItemId?.let { id -> Content.gifs.firstOrNull { it.id == id } }
 
     Column(Modifier.fillMaxSize().background(BgYellow)) {
+        StatusBarRow()
         H1("DISCOVER", eyebrow = "BETA")
+
         SearchBar(
             hint = "Search GIFs, stickers, memes...",
             value = query,
-            onValueChange = { query = it },
-            topPad = 14.dp
+            onValueChange = { query = it }
         )
-        Segment(Content.kinds, kind, { kind = it }, topPad = 12.dp)
-        ChipRow(Content.categories, category, { category = it }, topPad = 14.dp)
-        Segment(listOf("Trending", "Favorites", "Recent"), listSeg, { listSeg = it }, topPad = 12.dp)
+
+        Segment(Content.kinds, kind, { kind = it }, topPad = 10.dp)
+        ChipRow(Content.categories, category, { category = it }, topPad = 10.dp)
+        Segment(listOf("Trending", "Favorites", "Recent"), listSeg, { listSeg = it }, topPad = 10.dp)
 
         val base = Content.gifs.filter { g ->
             g.kind == Content.kinds[kind] &&
@@ -66,11 +70,12 @@ fun DiscoverScreen(nav: NavController) {
             else -> base
         }
 
+        // mockup .masonry: 2-col, 10dp gap, 18dp side padding
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(11.dp),
-            verticalItemSpacing = 11.dp,
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 28.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalItemSpacing = 10.dp,
+            contentPadding = PaddingValues(start = 18.dp, end = 18.dp, top = 16.dp, bottom = 28.dp),
             modifier = Modifier.weight(1f)
         ) {
             items(items) { entry ->
@@ -86,7 +91,7 @@ fun DiscoverScreen(nav: NavController) {
             if (items.isEmpty()) {
                 item(span = StaggeredGridItemSpan.FullLine) {
                     val msg = when (listSeg) {
-                        1 -> "NO FAVORITES IN THIS FILTER.\nDouble-tap a card's ❤ action and it lands here."
+                        1 -> "NO FAVORITES IN THIS FILTER.\nTap the heart on any GIF to keep it here."
                         2 -> "NOTHING RECENT.\nWhat you view or save shows up in this feed."
                         else -> "NO MATCHES.\nTry another category or search term."
                     }
@@ -109,6 +114,22 @@ fun DiscoverScreen(nav: NavController) {
     }
 }
 
+/** mockup .statusbar — 9:41 + signal dots, JetBrains Mono. */
+@Composable
+fun StatusBarRow() {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 2.dp)
+    ) {
+        Text("9:41", fontFamily = Mono, fontWeight = FontWeight.ExtraBold, fontSize = 11.sp, color = InkBlack)
+        Text("●●●", fontFamily = Mono, fontWeight = FontWeight.ExtraBold, fontSize = 8.sp, color = InkBlack)
+    }
+}
+
+/** mockup .gif-card — white card, 2px ink border, hard shadow, LOOP badge. */
 @Composable
 private fun GifCard(item: GifItem, onClick: () -> Unit) {
     Box(
@@ -167,6 +188,7 @@ private fun RecentCard(item: RecentView, onClick: () -> Unit) {
     }
 }
 
+/** mockup .loop-badge — white, 2px ink border, mono. */
 @Composable
 fun LoopBadge(modifier: Modifier = Modifier) {
     Box(
@@ -190,9 +212,7 @@ private data class RecentView(val title: String, val gradIdx: Int, val heightDp:
 
 private fun RecentView(r: RecentItem) = RecentView(r.title, r.gradIdx, 120 + (r.title.length * 6) % 90)
 
-/* ---------- Action sheet ---------- */
-
-private data class SheetActionDef(val label: String, val emojiIcon: (() -> Unit)? = null)
+/* ---------- Action sheet (mockup .sheet) ---------- */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -212,6 +232,7 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
             )
         }
     ) {
+        // mockup .sheet-preview — yellow, 2px ink border, 120dp
         GradientBox(
             item.gradIdx,
             Modifier
@@ -226,9 +247,9 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
             listOf("Send", "Save", "Favorite"),
             listOf("Edit", "Convert", "Wallpaper")
         )
-        Column(Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) {
-            rows.forEachIndexed { rowIdx, row ->
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(horizontal = 18.dp, vertical = 4.dp)) {
+            rows.forEachIndexed { _, row ->
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
                     row.forEach { label ->
                         val primary = label == "Send"
                         Column(
@@ -271,7 +292,7 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
                                         }
                                     }
                             ) {
-                                androidx.compose.material3.Icon(
+                                Icon(
                                     sheetIcon(label),
                                     contentDescription = label,
                                     tint = InkBlack,
@@ -295,7 +316,7 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
     }
 }
 
-private fun sheetIcon(label: String): androidx.compose.ui.graphics.vector.ImageVector = when (label) {
+private fun sheetIcon(label: String): ImageVector = when (label) {
     "Send" -> AppIcons.Send
     "Save" -> AppIcons.Bookmark
     "Favorite" -> AppIcons.Heart

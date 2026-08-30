@@ -23,8 +23,10 @@ import androidx.navigation.NavController
 import com.jacj90021.gifanywhere.bubble.BubbleService
 import com.jacj90021.gifanywhere.data.Store
 import com.jacj90021.gifanywhere.ui.components.*
+import com.jacj90021.gifanywhere.ui.screens.StatusBarRow
 import com.jacj90021.gifanywhere.ui.theme.*
 
+/** Mockup SETTINGS screen: Delivery / Export Defaults / General. */
 @Composable
 fun SettingsScreen(nav: NavController) {
     val context = LocalContext.current
@@ -52,10 +54,11 @@ fun SettingsScreen(nav: NavController) {
             .background(BgYellow)
             .verticalScroll(rememberScrollState())
     ) {
+        StatusBarRow()
         H1("SETTINGS")
 
-        // ---- Delivery ----
-        MonoLabel("Delivery", topPad = 8.dp)
+        // ---- Delivery (mockup: Keyboard + Floating Bubble) ----
+        MonoLabel("Delivery", topPad = 10.dp)
         SettingsCard {
             SettingsRow(
                 title = "Keyboard",
@@ -94,13 +97,13 @@ fun SettingsScreen(nav: NavController) {
             )
         }
 
-        // ---- Export defaults (mockup: Default Format + Quality only) ----
-        MonoLabel("Export defaults")
+        // ---- Export Defaults (mockup: Default Format + Quality) ----
+        MonoLabel("Export Defaults", topPad = 8.dp)
         val formats = listOf("Automatic", "GIF", "MP4", "WebP")
         val qualities = listOf("Auto", "High", "Balanced", "Small files")
         SettingsCard {
             SettingsRow(
-                title = "Default format",
+                title = "Default Format",
                 value = Store.defaultFormat,
                 chevron = true,
                 divider = false,
@@ -114,8 +117,8 @@ fun SettingsScreen(nav: NavController) {
             )
         }
 
-        // ---- General (mockup: Theme Light ›) ----
-        MonoLabel("General")
+        // ---- General (mockup: Theme Light / Language / About) ----
+        MonoLabel("General", topPad = 8.dp)
         val themes = listOf("Light", "Dark")
         val languages = listOf("English", "Español", "Français")
         SettingsCard {
@@ -150,7 +153,7 @@ fun SettingsScreen(nav: NavController) {
             title = { Text("GIF Anywhere 1.0", fontFamily = Lilita) },
             text = {
                 Text(
-                    "Create, convert and send looping GIFs from any app.\n\n• Discover — trending GIFs, stickers & memes\n• Studio — 7 creation tools + batch export\n• Library — favorites, wallpapers & storage\n• Keyboard + Floating Bubble for system-wide access\n\nBuilt with Jetpack Compose.",
+                    "Create, convert and send looping GIFs from any app.\n\n• Discover — trending GIFs, stickers & memes\n• Studio — creation tools + batch export\n• Library — favorites, wallpapers & storage\n• Keyboard + Floating Bubble for system-wide access\n\nBuilt with Jetpack Compose.",
                     fontFamily = InterTight,
                     fontSize = 13.sp
                 )

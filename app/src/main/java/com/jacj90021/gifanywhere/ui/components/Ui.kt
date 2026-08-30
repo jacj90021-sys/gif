@@ -1,6 +1,5 @@
 package com.jacj90021.gifanywhere.ui.components
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -8,16 +7,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.horizontalDrag
@@ -33,14 +25,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
@@ -48,18 +44,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jacj90021.gifanywhere.data.Content
 import com.jacj90021.gifanywhere.ui.theme.*
 import kotlinx.coroutines.launch
 
+/* ============================================================
+ * Neo-brutalist primitives — rebuilt from the approved mockup
+ * ============================================================ */
 
-
-/* ---------- Neo-brutalist primitives ---------- */
-
-/** Hard offset shadow — the signature of the neo-brutalist look. */
+/** Hard offset shadow: the signature neo-brutalist look. */
 fun Modifier.hardShadow(depth: Dp = 3.dp, color: Color = InkBlack): Modifier = this.then(
     Modifier.drawBehind {
         if (depth.value > 0f) {
@@ -73,90 +68,18 @@ fun Modifier.hardShadow(depth: Dp = 3.dp, color: Color = InkBlack): Modifier = t
     }
 )
 
-/** White card: 2px ink border + hard shadow + 12dp corners. */
-@Composable
-fun NeoCard(
-    modifier: Modifier = Modifier,
-    corner: Dp = 12.dp,
-    shadow: Dp = 3.dp,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(corner))
-            .background(CardWhite)
-            .hardShadow(shadow)
-            .border(2.dp, InkBlack, RoundedCornerShape(corner)),
-        content = content
-    )
-}
-
-/** Dashed divider used inside white cards (matches the reference CSS). */
-@Composable
-fun DashedDivider(color: Color = InkBlack.copy(alpha = 0.12f)) {
-    val strokeColor = color
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .height(1.5.dp)
-            .drawBehind {
-                drawLine(
-                    color = strokeColor,
-                    start = Offset(0f, size.height / 2f),
-                    end = Offset(size.width, size.height / 2f),
-                    strokeWidth = 1.5.dp.toPx(),
-                    pathEffect = PathEffect.dashPathEffect(
-                        floatArrayOf(8.dp.toPx(), 6.dp.toPx())
-                    )
-                )
-            }
-    )
-}
-
-/* ---------- Header ---------- */
-
-@Composable
-fun H1(
-    text: String,
-    size: TextUnit = 26.sp,
-    topPad: Dp = 14.dp,
-    hPad: Dp = 20.dp,
-    bottomPad: Dp = 0.dp,
-    eyebrow: String? = null
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(start = hPad, end = hPad, top = topPad, bottom = bottomPad)
-    ) {
-        Text(
-            text = text.uppercase() + ".",
-            fontFamily = Lilita,
-            fontSize = size,
-            letterSpacing = (-0.5).sp,
-            color = InkBlack
+/** Ripple-free clickable that keeps full accessibility semantics. */
+fun Modifier.clickableNoRipple(enabled: Boolean = true, onClick: () -> Unit): Modifier =
+    this.then(
+        Modifier.clickable(
+            interactionSource = MutableInteractionSource(),
+            indication = null,
+            enabled = enabled,
+            onClick = onClick
         )
-        if (eyebrow != null) {
-            Spacer(Modifier.width(8.dp))
-            Text(
-                eyebrow.uppercase(),
-                fontFamily = Mono,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 9.sp,
-                letterSpacing = 1.5.sp,
-                color = InkBlack,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(InkBlack)
-                    .padding(horizontal = 7.dp, vertical = 3.dp)
-            )
-        }
-    }
-}
+    )
 
-/**
- * Press feedback: spring scale-down while pressed, full accessibility
- * semantics, no ripple (the dark design language uses scale, not ripple).
- */
+/** Press feedback: spring scale-down while pressed, no ripple. */
 @Composable
 fun Modifier.pressable(enabled: Boolean = true, pressedScale: Float = 0.97f, onClick: () -> Unit): Modifier {
     val source = remember { MutableInteractionSource() }
@@ -171,8 +94,57 @@ fun Modifier.pressable(enabled: Boolean = true, pressedScale: Float = 0.97f, onC
         .clickable(interactionSource = source, indication = null, enabled = enabled, onClick = onClick)
 }
 
+/* ---------- Header (mockup .topbar) ---------- */
+
 @Composable
-fun MonoLabel(text: String, modifier: Modifier = Modifier, hPad: Dp = 20.dp, topPad: Dp = 20.dp, bottomPad: Dp = 8.dp) {
+fun H1(
+    text: String,
+    size: TextUnit = 24.sp,
+    topPad: Dp = 8.dp,
+    hPad: Dp = 18.dp,
+    bottomPad: Dp = 0.dp,
+    eyebrow: String? = null
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = hPad, end = hPad, top = topPad, bottom = bottomPad)
+    ) {
+        Text(
+            text = text.uppercase(),
+            fontFamily = Lilita,
+            fontSize = size,
+            letterSpacing = (-0.5).sp,
+            color = InkBlack
+        )
+        Text(
+            ".",
+            fontFamily = Lilita,
+            fontSize = size,
+            letterSpacing = (-0.5).sp,
+            color = InkBlack
+        )
+        if (eyebrow != null) {
+            Spacer(Modifier.weight(1f))
+            Text(
+                eyebrow.uppercase(),
+                fontFamily = Mono,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 9.sp,
+                letterSpacing = 1.5.sp,
+                color = BgYellow,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(InkBlack)
+                    .padding(horizontal = 7.dp, vertical = 3.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun MonoLabel(text: String, modifier: Modifier = Modifier, hPad: Dp = 18.dp, topPad: Dp = 4.dp, bottomPad: Dp = 8.dp) {
     Text(
         text = text.uppercase(),
         fontFamily = Mono,
@@ -184,7 +156,7 @@ fun MonoLabel(text: String, modifier: Modifier = Modifier, hPad: Dp = 20.dp, top
     )
 }
 
-/* ---------- Search bar ---------- */
+/* ---------- Search bar (mockup .searchbar) ---------- */
 
 @Composable
 fun SearchBar(
@@ -192,8 +164,8 @@ fun SearchBar(
     value: String? = null,
     onValueChange: ((String) -> Unit)? = null,
     onClick: (() -> Unit)? = null,
-    topPad: Dp = 14.dp,
-    hPad: Dp = 20.dp,
+    topPad: Dp = 4.dp,
+    hPad: Dp = 18.dp,
     modifier: Modifier = Modifier
 ) {
     val focusSource = remember { MutableInteractionSource() }
@@ -203,12 +175,13 @@ fun SearchBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .padding(start = hPad, end = hPad, top = topPad)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(CardWhite)
             .hardShadow(3.dp)
             .border(2.dp, borderColor, RoundedCornerShape(12.dp))
             .clickableNoRipple { onClick?.invoke() }
-            .padding(horizontal = 12.dp, vertical = 11.dp)
+            .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
         Text("⌕", color = InkBlack, fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
         Spacer(Modifier.width(8.dp))
@@ -247,15 +220,16 @@ fun SearchBar(
     }
 }
 
-/* ---------- Segmented control ---------- */
+/* ---------- Segmented control (mockup .seg) ---------- */
 
 @Composable
-fun Segment(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 14.dp) {
+fun Segment(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 0.dp) {
     Row(
         modifier = modifier
             .padding(start = 18.dp, end = 18.dp, top = topPad)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(InkBlack.copy(alpha = 0.06f))
+            .background(Color(0x0F0A0A0A))
             .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             .padding(3.dp)
     ) {
@@ -277,20 +251,20 @@ fun Segment(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
                     .then(if (on) Modifier.hardShadow(2.dp) else Modifier)
                     .then(if (on) Modifier.border(2.dp, InkBlack, RoundedCornerShape(8.dp)) else Modifier)
                     .pressable { onSelect(i) }
-                    .padding(vertical = 7.dp)
+                    .padding(vertical = 6.dp)
             )
         }
     }
 }
 
-/* ---------- Chip row ---------- */
+/* ---------- Chip row (mockup .chip-row) ---------- */
 
 @Composable
-fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 14.dp) {
+fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 0.dp) {
     Box(modifier = modifier.fillMaxWidth().padding(top = topPad)) {
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 20.dp)
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            contentPadding = PaddingValues(horizontal = 18.dp)
         ) {
             items(options.size) { i ->
                 val on = i == selected
@@ -303,7 +277,7 @@ fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
                         .background(bg)
                         .border(2.dp, InkBlack, RoundedCornerShape(20.dp))
                         .pressable { onSelect(i) }
-                        .padding(horizontal = 12.dp, vertical = 7.dp)
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
                         options[i],
@@ -315,16 +289,11 @@ fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
                 }
             }
         }
-        // trailing fade signals more chips off-screen
         EdgeFade()
     }
 }
 
-/**
- * Gradient veil over the trailing (or leading) edge of a horizontally
- * scrolling row so cut-off content clearly reads as scrollable.
- * Must be inside a Box scope; pass the row's background color.
- */
+/** Fade veil on the trailing edge of a horizontally scrolling row. */
 @Composable
 fun BoxScope.EdgeFade(color: Color = InkBlack, width: Dp = 32.dp, start: Boolean = false) {
     Box(
@@ -341,10 +310,10 @@ fun BoxScope.EdgeFade(color: Color = InkBlack, width: Dp = 32.dp, start: Boolean
     )
 }
 
-/* ---------- Slider (single value) ---------- */
+/* ---------- Sliders (mockup .slider-track / .slider-handle) ---------- */
 
 @Composable
-fun SliderRow(label: String, valueText: String, topPad: Dp = 12.dp) {
+fun SliderRow(label: String, valueText: String, topPad: Dp = 10.dp) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -369,7 +338,7 @@ fun SliderRow(label: String, valueText: String, topPad: Dp = 12.dp) {
 }
 
 @Composable
-fun GifSlider(progress: Float, onProgress: (Float) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 8.dp) {
+fun GifSlider(progress: Float, onProgress: (Float) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 6.dp) {
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
@@ -433,7 +402,7 @@ fun GifSlider(progress: Float, onProgress: (Float) -> Unit, modifier: Modifier =
 /* ---------- Trim slider (range) ---------- */
 
 @Composable
-fun TrimSlider(start: Float, end: Float, onChange: (Float, Float) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 8.dp) {
+fun TrimSlider(start: Float, end: Float, onChange: (Float, Float) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 6.dp) {
     val currentStart = rememberUpdatedState(start)
     val currentEnd = rememberUpdatedState(end)
     BoxWithConstraints(
@@ -507,7 +476,7 @@ fun TrimSlider(start: Float, end: Float, onChange: (Float, Float) -> Unit, modif
     }
 }
 
-/* ---------- Toggle ---------- */
+/* ---------- Toggle (mockup .toggle) ---------- */
 
 @Composable
 fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
@@ -518,7 +487,6 @@ fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
     )
     val haptics = LocalHapticFeedback.current
     val bg by animateColorAsState(if (checked) BgYellow else Color(0x1A0A0A0A), tween(180), label = "tBg")
-    val knob by animateColorAsState(if (checked) InkBlack else InkBlack, tween(180), label = "tKnob")
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
@@ -536,12 +504,12 @@ fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
                 .offset(x = knobOffset)
                 .size(14.dp)
                 .clip(CircleShape)
-                .background(knob)
+                .background(InkBlack)
         )
     }
 }
 
-/* ---------- Status pill ---------- */
+/* ---------- Status pill (mockup .status-pill) ---------- */
 
 @Composable
 fun StatusPill(active: Boolean, text: String, onClick: (() -> Unit)? = null) {
@@ -566,7 +534,28 @@ fun StatusPill(active: Boolean, text: String, onClick: (() -> Unit)? = null) {
     }
 }
 
-/* ---------- Settings group / rows ---------- */
+/* ---------- Settings group / rows (mockup .set-group / .set-row) ---------- */
+
+@Composable
+fun DashedDivider(color: Color = InkBlack.copy(alpha = 0.12f)) {
+    val strokeColor = color
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(1.5.dp)
+            .drawBehind {
+                drawLine(
+                    color = strokeColor,
+                    start = Offset(0f, size.height / 2f),
+                    end = Offset(size.width, size.height / 2f),
+                    strokeWidth = 1.5.dp.toPx(),
+                    pathEffect = PathEffect.dashPathEffect(
+                        floatArrayOf(8.dp.toPx(), 6.dp.toPx())
+                    )
+                )
+            }
+    )
+}
 
 @Composable
 fun SettingsCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
@@ -618,6 +607,41 @@ fun SettingsRow(
     }
 }
 
+/* ---------- White card (mockup .box-card) ---------- */
+
+@Composable
+fun NeoCard(
+    modifier: Modifier = Modifier,
+    corner: Dp = 16.dp,
+    shadow: Dp = 3.dp,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 18.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corner))
+            .background(CardWhite)
+            .hardShadow(shadow)
+            .border(2.dp, InkBlack, RoundedCornerShape(corner))
+            .padding(14.dp),
+        content = content
+    )
+}
+
+@Composable
+fun CardLabel(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text.uppercase(),
+        fontFamily = Mono,
+        fontSize = 9.5.sp,
+        fontWeight = FontWeight.ExtraBold,
+        color = InkMuted,
+        letterSpacing = 0.5.sp,
+        modifier = modifier
+    )
+}
+
 /* ---------- Export button with progress → success transition ---------- */
 
 @Composable
@@ -645,7 +669,7 @@ fun ExportAction(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .padding(start = 18.dp, end = 18.dp, top = 18.dp, bottom = 22.dp)
+            .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 12.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(InkBlack)
@@ -653,8 +677,6 @@ fun ExportAction(
             .pressable(enabled = state == 0) {
                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 state = 1
-                // data change happens IMMEDIATELY so navigating away mid-
-                // animation can never silently drop the export
                 onExport()
                 scope.launch {
                     kotlinx.coroutines.delay(1200)
@@ -664,7 +686,7 @@ fun ExportAction(
                     state = 0
                 }
             }
-            .padding(vertical = 16.dp)
+            .padding(vertical = 14.dp)
     ) {
         if (state == 1) {
             Box(
@@ -672,14 +694,33 @@ fun ExportAction(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth(progress.value)
                     .height(3.dp)
-                    .background(InkBlack.copy(alpha = 0.25f))
+                    .background(BgYellow.copy(alpha = 0.5f))
             )
         }
         Text(shown, fontFamily = Lilita, fontSize = 13.sp, letterSpacing = 0.5.sp, color = BgYellow)
     }
 }
 
-/* ---------- Gradient tile ---------- */
+/* ---------- Plain action button (black, yellow text) ---------- */
+
+@Composable
+fun YellowButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 12.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(InkBlack)
+            .hardShadow(3.dp, CardWhite)
+            .pressable { onClick() }
+            .padding(vertical = 14.dp)
+    ) {
+        Text(label, fontFamily = Lilita, fontSize = 13.sp, letterSpacing = 0.5.sp, color = BgYellow)
+    }
+}
+
+/* ---------- Gradient tile (white preview per mockup) ---------- */
 
 @Composable
 fun GradientBox(gradIdx: Int, modifier: Modifier = Modifier, corner: Dp = 0.dp, content: @Composable BoxScope.() -> Unit = {}) {
@@ -697,39 +738,3 @@ fun GradientBox(gradIdx: Int, modifier: Modifier = Modifier, corner: Dp = 0.dp, 
         content = content
     )
 }
-
-/* ---------- plain yellow action button ---------- */
-
-@Composable
-fun YellowButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .padding(start = 18.dp, end = 18.dp, top = 18.dp, bottom = 22.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(InkBlack)
-            .hardShadow(3.dp, CardWhite)
-            .pressable { onClick() }
-            .padding(vertical = 14.dp)
-    ) {
-        Text(label, fontFamily = Lilita, fontSize = 13.sp, letterSpacing = 0.5.sp, color = BgYellow)
-    }
-}
-
-/* ---------- helpers ---------- */
-
-/**
- * Ripple-free clickable that keeps full accessibility semantics
- * (TalkBack focus + click action) — a raw pointerInput gesture detector
- * would be invisible to screen readers.
- */
-fun Modifier.clickableNoRipple(enabled: Boolean = true, onClick: () -> Unit): Modifier =
-    this.then(
-        Modifier.clickable(
-            interactionSource = MutableInteractionSource(),
-            indication = null,
-            enabled = enabled,
-            onClick = onClick
-        )
-    )

@@ -16,7 +16,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -28,11 +27,13 @@ import com.jacj90021.gifanywhere.data.Creation
 import com.jacj90021.gifanywhere.data.RecentItem
 import com.jacj90021.gifanywhere.data.Store
 import com.jacj90021.gifanywhere.ui.components.*
+import com.jacj90021.gifanywhere.ui.screens.StatusBarRow
 import com.jacj90021.gifanywhere.ui.theme.*
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/** Mockup STUDIO screen: sources row, tools grid, export box, EXPORT button. */
 @Composable
 fun StudioScreen(nav: NavController) {
     val context = LocalContext.current
@@ -45,13 +46,14 @@ fun StudioScreen(nav: NavController) {
             .background(BgYellow)
             .verticalScroll(rememberScrollState())
     ) {
+        StatusBarRow()
         H1("STUDIO")
 
-        // ---- Source picker row ----
-        Box(Modifier.fillMaxWidth().padding(top = 14.dp)) {
+        // ---- mockup .source-row: Gallery / Camera / Video / URL ----
+        Box(Modifier.fillMaxWidth().padding(top = 10.dp)) {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(horizontal = 20.dp)
+                contentPadding = PaddingValues(horizontal = 18.dp)
             ) {
                 items(Content.sources.size) { i ->
                     val name = Content.sources[i]
@@ -66,21 +68,20 @@ fun StudioScreen(nav: NavController) {
             EdgeFade()
         }
 
-        // ---- 5-tile tools grid (exactly the mockup) ----
+        // ---- mockup .tools-grid: Video→GIF big + 2×2 ----
         Column(
-            verticalArrangement = Arrangement.spacedBy(11.dp),
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)
         ) {
-            // big card spans both columns
             ToolCardBig(
                 title = "Video → GIF",
                 sub = "Trim any clip into a loop"
             ) { nav.navigate("tool/video") { launchSingleTop = true } }
-            Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 ToolCard("boomerang", "Boomerang", AppIcons.Repeat, Modifier.weight(1f)) { nav.navigate("tool/boomerang") { launchSingleTop = true } }
                 ToolCard("screenrec", "Screen Rec", AppIcons.Monitor, Modifier.weight(1f)) { nav.navigate("tool/screenrec") { launchSingleTop = true } }
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 ToolCard("editor", "GIF Editor", AppIcons.Studio, Modifier.weight(1f)) { nav.navigate("tool/editor") { launchSingleTop = true } }
                 ToolCard("meme", "Meme Maker", AppIcons.Meme, Modifier.weight(1f)) { nav.navigate("tool/meme") { launchSingleTop = true } }
             }
@@ -148,7 +149,7 @@ fun StudioScreen(nav: NavController) {
     }
 }
 
-/* ---------- Source picker ---------- */
+/* ---------- mockup .source-btn ---------- */
 
 private fun sourceIcon(name: String): ImageVector = when (name) {
     "Gallery" -> AppIcons.Image
@@ -186,7 +187,7 @@ private fun SourceButton(icon: ImageVector, label: String, onClick: () -> Unit) 
     }
 }
 
-/* ---------- Tool tiles ---------- */
+/* ---------- mockup .tool-card ---------- */
 
 @Composable
 private fun ToolCardBig(title: String, sub: String, onClick: () -> Unit) {
@@ -213,7 +214,7 @@ private fun ToolCardBig(title: String, sub: String, onClick: () -> Unit) {
         }
         Column(Modifier.padding(start = 10.dp)) {
             Text(title, fontFamily = InterTight, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp, color = InkBlack)
-            Text(sub, fontFamily = InterTight, fontWeight = FontWeight.Medium, fontSize = 10.sp, color = InkMuted)
+            Text(sub, fontFamily = InterTight, fontWeight = FontWeight.Medium, fontSize = 10.sp, color = InkMuted, modifier = Modifier.padding(top = 1.dp))
         }
     }
 }
@@ -250,13 +251,13 @@ private fun ToolCard(id: String, title: String, icon: ImageVector, modifier: Mod
     }
 }
 
-/* ---------- Export panel ---------- */
+/* ---------- mockup .box-card (Export Format / Platform / FPS / Batch) ---------- */
 
 @Composable
 fun ExportPanel() {
     Column(
         Modifier
-            .padding(horizontal = 18.dp, vertical = 0.dp)
+            .padding(horizontal = 18.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(CardWhite)
@@ -264,17 +265,10 @@ fun ExportPanel() {
             .border(2.dp, InkBlack, RoundedCornerShape(16.dp))
             .padding(14.dp)
     ) {
-        Text(
-            "EXPORT FORMAT",
-            fontFamily = Mono,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 9.5.sp,
-            color = InkMuted,
-            letterSpacing = 0.5.sp
-        )
-        // format chips
+        CardLabel("Export Format")
+        // mockup .format-row — GIF / MP4 / WebP / WebM
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
             modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
         ) {
             Content.formats.forEach { f ->
@@ -300,17 +294,10 @@ fun ExportPanel() {
             }
         }
 
-        Text(
-            "PLATFORM PRESET",
-            fontFamily = Mono,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 9.5.sp,
-            color = InkMuted,
-            letterSpacing = 0.5.sp,
-            modifier = Modifier.padding(top = 14.dp)
-        )
+        CardLabel("Platform Preset", modifier = Modifier.padding(top = 14.dp))
+        // mockup .platform-row — Discord / Instagram / WhatsApp
         Box(Modifier.fillMaxWidth().padding(top = 10.dp)) {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 items(Content.platforms.size) { i ->
                     val name = Content.platforms[i]
                     val on = Store.platform == name
@@ -333,24 +320,23 @@ fun ExportPanel() {
                     }
                 }
             }
-            // trailing fade signals more presets off-screen
             EdgeFade(color = CardWhite)
         }
 
-        // FPS slider: 5..60 (mockup: single FPS Rate slider)
+        // mockup .slider-row — FPS Rate 24
         SliderRow("FPS Rate", "${Store.fps.toInt()}")
         GifSlider(
             progress = (Store.fps - 5f) / 55f,
             onProgress = { Store.fps = 5f + it * 55f }
         )
 
-        // batch row
-        Spacer(Modifier.height(14.dp))
+        // batch row with dashed divider
+        Spacer(Modifier.height(10.dp))
         DashedDivider()
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
         ) {
             Text("Batch Export", fontFamily = InterTight, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp, color = InkBlack)
             AppToggle(checked = Store.batch) { Store.batch = it }

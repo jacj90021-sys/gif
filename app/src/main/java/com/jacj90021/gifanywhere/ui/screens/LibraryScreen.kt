@@ -13,12 +13,14 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,16 +33,19 @@ import com.jacj90021.gifanywhere.data.Folder
 import com.jacj90021.gifanywhere.data.RecentItem
 import com.jacj90021.gifanywhere.data.Store
 import com.jacj90021.gifanywhere.ui.components.*
+import com.jacj90021.gifanywhere.ui.screens.StatusBarRow
 import com.jacj90021.gifanywhere.ui.theme.*
 
+/** Mockup LIBRARY screen: seg, folder grid, wallpapers, cache storage. */
 @Composable
 fun LibraryScreen(nav: NavController) {
     val context = LocalContext.current
     var seg by rememberSaveable { mutableStateOf(0) }
 
     Column(Modifier.fillMaxSize().background(BgYellow)) {
+        StatusBarRow()
         H1("LIBRARY")
-        Segment(listOf("Favorites", "Recent", "Creations"), seg, { seg = it }, topPad = 12.dp)
+        Segment(listOf("Favorites", "Recent", "Creations"), seg, { seg = it }, topPad = 10.dp)
 
         AnimatedContent(
             targetState = seg,
@@ -56,69 +61,69 @@ fun LibraryScreen(nav: NavController) {
                     .verticalScroll(rememberScrollState())
             ) {
                 when (currentSeg) {
-                0 -> {
-                    if (Store.folders.isEmpty()) {
-                        EmptyState(
-                            icon = AppIcons.Heart,
-                            title = "NO FAVORITES YET.",
-                            sub = "Tap the heart on any GIF in Discover and your keepers will collect here."
-                        )
+                    0 -> {
+                        if (Store.folders.isEmpty()) {
+                            EmptyState(
+                                icon = AppIcons.Heart,
+                                title = "NO FAVORITES YET.",
+                                sub = "Tap the heart on any GIF in Discover and your keepers will collect here."
+                            )
+                        }
+                        FolderGrid()
                     }
-                    FolderGrid()
-                }
-                1 -> {
-                    if (Store.recent.isEmpty()) {
-                        EmptyState(
-                            icon = AppIcons.Repeat,
-                            title = "NOTHING RECENT.",
-                            sub = "Everything you view or save in the last 30 days will show up in this feed."
-                        )
-                    } else {
-                        RecentGrid()
+                    1 -> {
+                        if (Store.recent.isEmpty()) {
+                            EmptyState(
+                                icon = AppIcons.Repeat,
+                                title = "NOTHING RECENT.",
+                                sub = "Everything you view or save in the last 30 days will show up in this feed."
+                            )
+                        } else {
+                            RecentGrid()
+                        }
+                    }
+                    else -> {
+                        if (Store.creations.isEmpty()) {
+                            EmptyState(
+                                icon = AppIcons.Studio,
+                                title = "YOUR STUDIO IS EMPTY.",
+                                sub = "Trim a video, caption a meme or record your screen — everything you export lands right here."
+                            )
+                        } else {
+                            CreationsGrid()
+                        }
                     }
                 }
-                else -> {
-                    if (Store.creations.isEmpty()) {
-                        EmptyState(
-                            icon = AppIcons.Studio,
-                            title = "YOUR STUDIO IS EMPTY.",
-                            sub = "Trim a video, caption a meme or record your screen — everything you export lands right here."
-                        )
-                    } else {
-                        CreationsGrid()
-                    }
-                }
-            }
 
-            // ---- Wallpapers ----
-            H1("WALLPAPERS", size = 18.sp, topPad = 10.dp, bottomPad = 2.dp)
-            WallpaperSection(context)
-            // ---- Storage ----
-            StorageCard(context)
-            Spacer(Modifier.height(32.dp))  // clears the bottom nav + system gesture bar
+                // ---- Wallpapers ----
+                H1("WALLPAPERS", size = 18.sp, topPad = 10.dp, bottomPad = 2.dp)
+                WallpaperSection(context)
+                // ---- Storage ----
+                StorageCard(context)
+                Spacer(Modifier.height(32.dp))
             }
         }
     }
 }
 
-/* ---------- Folder collections ---------- */
+/* ---------- mockup .folder-grid ---------- */
 
 @Composable
 private fun FolderGrid() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)
     ) {
         val rows = Store.folders.chunked(2)
         rows.forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { f ->
                     FolderCard(f, Modifier.weight(1f))
                 }
                 if (row.size == 1) Spacer(Modifier.weight(1f))
             }
         }
-        // New folder tile
+        // New folder tile (mockup: "+" count, "New Folder" name)
         Row {
             Box(
                 contentAlignment = Alignment.BottomStart,
@@ -147,7 +152,8 @@ private fun FolderGrid() {
                         fontFamily = InterTight,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 12.sp,
-                        color = InkBlack
+                        color = InkBlack,
+                        modifier = Modifier.padding(top = 40.dp)
                     )
                 }
             }
@@ -156,9 +162,9 @@ private fun FolderGrid() {
     }
 }
 
+/** mockup .folder-card — white, count pill top-right (yellow), name bottom. */
 @Composable
 private fun FolderCard(f: Folder, modifier: Modifier = Modifier) {
-    val g = Content.grads[f.gradIdx % 5]
     Box(
         contentAlignment = Alignment.BottomStart,
         modifier = modifier
@@ -188,7 +194,7 @@ private fun FolderCard(f: Folder, modifier: Modifier = Modifier) {
             fontFamily = InterTight,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 12.sp,
-            color = OffWhite,
+            color = InkBlack,
             modifier = Modifier.padding(top = 40.dp)
         )
     }
@@ -199,11 +205,11 @@ private fun FolderCard(f: Folder, modifier: Modifier = Modifier) {
 @Composable
 private fun RecentGrid() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(11.dp),
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)
     ) {
         Store.recent.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { r ->
                     GradientBox(
                         r.gradIdx,
@@ -211,6 +217,7 @@ private fun RecentGrid() {
                             .weight(1f)
                             .height(130.dp)
                             .clip(RoundedCornerShape(16.dp))
+                            .border(2.dp, InkBlack, RoundedCornerShape(16.dp))
                     ) {
                         LoopBadge(Modifier.align(Alignment.TopEnd).padding(8.dp))
                         Text(
@@ -218,7 +225,7 @@ private fun RecentGrid() {
                             fontFamily = InterTight,
                             fontWeight = FontWeight.Bold,
                             fontSize = 10.sp,
-                            color = OffWhite,
+                            color = InkBlack,
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .padding(8.dp)
@@ -236,11 +243,11 @@ private fun RecentGrid() {
 @Composable
 private fun CreationsGrid() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(11.dp),
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)
     ) {
         Store.creations.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { c: Creation ->
                     Column(
                         modifier = Modifier
@@ -274,17 +281,17 @@ private fun CreationsGrid() {
     }
 }
 
-/* ---------- Empty states (unique copy per section) ---------- */
+/* ---------- Empty states ---------- */
 
 @Composable
-private fun EmptyState(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, sub: String) {
+private fun EmptyState(icon: ImageVector, title: String, sub: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 40.dp, vertical = 40.dp)
     ) {
-        androidx.compose.material3.Icon(
+        Icon(
             icon,
             contentDescription = null,
             tint = InkBlack.copy(alpha = 0.15f),
@@ -311,51 +318,55 @@ private fun EmptyState(icon: androidx.compose.ui.graphics.vector.ImageVector, ti
     }
 }
 
-/* ---------- Wallpapers ---------- */
+/* ---------- mockup wall-grid ---------- */
 
 @Composable
 private fun WallpaperSection(context: android.content.Context) {
     val targets = listOf("Home", "Lock", "Both")
+    // mockup .seg for wall target
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp)
+        modifier = Modifier
+            .padding(start = 18.dp, end = 18.dp, top = 10.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(androidx.compose.ui.graphics.Color(0x0F0A0A0A))
+            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
+            .padding(3.dp)
     ) {
         targets.forEach { t ->
             val on = Store.wallTarget == t
-            Box(
-                contentAlignment = Alignment.Center,
+            Text(
+                t.uppercase(),
+                fontFamily = InterTight,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 10.sp,
+                color = if (on) InkBlack else InkMuted,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(if (on) BgYellow else CardWhite)
-                    .hardShadow(2.dp)
-                    .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
+                    .background(if (on) CardWhite else androidx.compose.ui.graphics.Color.Transparent)
+                    .then(if (on) Modifier.hardShadow(2.dp) else Modifier)
+                    .then(if (on) Modifier.border(2.dp, InkBlack, RoundedCornerShape(8.dp)) else Modifier)
                     .clickableNoRipple { Store.wallTarget = t }
-                    .padding(vertical = 7.dp)
-            ) {
-                Text(
-                    t,
-                    fontFamily = InterTight,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 10.sp,
-                    color = InkBlack
-                )
-            }
+                    .padding(vertical = 6.dp)
+            )
         }
     }
+    // mockup .wall-grid — 3 columns, 9/16 tiles, SET chip bottom
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(horizontal = 20.dp)
+        modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp)
     ) {
-        com.jacj90021.gifanywhere.data.Content.wallpaperGrads.forEach { gi ->
+        Content.wallpaperGrads.forEach { gi ->
             var setLabel by remember { mutableStateOf("SET") }
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .aspectRatio(9f / 16f)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(8.dp))
             ) {
-                GradientBox(gi, Modifier.fillMaxSize().border(2.dp, InkBlack, RoundedCornerShape(12.dp)))
+                GradientBox(gi, Modifier.fillMaxSize().border(2.dp, InkBlack, RoundedCornerShape(8.dp)))
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -384,13 +395,13 @@ private fun WallpaperSection(context: android.content.Context) {
     }
 }
 
-/* ---------- Storage manager ---------- */
+/* ---------- mockup .box-card (Cache Storage) ---------- */
 
 @Composable
 private fun StorageCard(context: android.content.Context) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 18.dp, vertical = 20.dp)
+            .padding(horizontal = 18.dp, vertical = 12.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(CardWhite)
@@ -417,7 +428,7 @@ private fun StorageCard(context: android.content.Context) {
         }
         Box(
             Modifier
-                .padding(top = 10.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth()
                 .height(6.dp)
                 .clip(RoundedCornerShape(3.dp))
@@ -434,7 +445,7 @@ private fun StorageCard(context: android.content.Context) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 10.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .background(CardWhite)

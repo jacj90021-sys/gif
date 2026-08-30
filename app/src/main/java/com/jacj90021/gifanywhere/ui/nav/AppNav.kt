@@ -61,14 +61,12 @@ fun AppNav(routeRequest: String? = null) {
         Modifier
             .fillMaxSize()
             .background(BgYellow)
-            .statusBarsPadding()   // content starts below the status bar; yellow still renders behind it
+            .statusBarsPadding()
     ) {
         NavHost(
             navController = nav,
             startDestination = "discover",
             modifier = Modifier.weight(1f),
-            // Motion system: tabs cross-fade with a soft zoom; tool screens
-            // slide up like modals and slide back down on close.
             enterTransition = { fadeIn(tween(200)) + scaleIn(initialScale = 0.97f, animationSpec = tween(200)) },
             exitTransition = { fadeOut(tween(140)) },
             popEnterTransition = { fadeIn(tween(200)) },
@@ -92,7 +90,6 @@ fun AppNav(routeRequest: String? = null) {
         }
 
         // Deep link from the Floating Bubble ("studio", "tool/editor", …).
-        // Fires on first composition AND whenever a new intent delivers a route.
         LaunchedEffect(routeRequest) {
             val target = routeRequest?.takeIf { it.isNotBlank() && it != "discover" } ?: return@LaunchedEffect
             nav.navigate(target) { launchSingleTop = true }
@@ -110,6 +107,7 @@ fun AppNav(routeRequest: String? = null) {
     }
 }
 
+/** Mockup .navbar: white bar, 2px ink top border, active tab = yellow pill. */
 @Composable
 private fun BottomBar(current: String, onSelect: (String) -> Unit) {
     Row(
@@ -117,8 +115,6 @@ private fun BottomBar(current: String, onSelect: (String) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            // background fills edge-to-edge (incl. behind the system nav bar),
-            // then the bar content is padded above the system navigation inset
             .background(CardWhite)
             .navigationBarsPadding()
             .border(2.dp, InkBlack)
