@@ -49,10 +49,10 @@ fun SettingsScreen(nav: NavController) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(InkBlack)
+            .background(BgYellow)
             .verticalScroll(rememberScrollState())
     ) {
-        H1("SETTINGS", eyebrow = "GIF Anywhere")
+        H1("SETTINGS", eyebrow = "APP")
 
         // ---- Delivery ----
         MonoLabel("Delivery", topPad = 8.dp)
@@ -170,9 +170,9 @@ fun SettingsScreen(nav: NavController) {
     if (showAbout) {
         AlertDialog(
             onDismissRequest = { showAbout = false },
-            containerColor = Charcoal,
-            titleContentColor = OffWhite,
-            textContentColor = OffDim,
+            containerColor = CardWhite,
+            titleContentColor = InkBlack,
+            textContentColor = InkMuted,
             title = { Text("GIF Anywhere 1.0", fontFamily = Lilita) },
             text = {
                 Text(
@@ -183,7 +183,7 @@ fun SettingsScreen(nav: NavController) {
             },
             confirmButton = {
                 TextButton(onClick = { showAbout = false }) {
-                    Text("OK", color = Yellow, fontFamily = Mono, fontWeight = FontWeight.Bold)
+                    Text("OK", color = InkBlack, fontFamily = Mono, fontWeight = FontWeight.Bold)
                 }
             }
         )

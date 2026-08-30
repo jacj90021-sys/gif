@@ -54,10 +54,10 @@ fun StudioScreen(nav: NavController) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(InkBlack)
+            .background(BgYellow)
             .verticalScroll(rememberScrollState())
     ) {
-        H1("STUDIO", eyebrow = "GIF Anywhere")
+        H1("STUDIO", eyebrow = "CREATE")
 
         // ---- Source picker row ----
         Box(Modifier.fillMaxWidth().padding(top = 14.dp)) {
@@ -119,9 +119,9 @@ fun StudioScreen(nav: NavController) {
     if (showUrlDialog) {
         AlertDialog(
             onDismissRequest = { showUrlDialog = false },
-            containerColor = Charcoal,
-            titleContentColor = OffWhite,
-            textContentColor = OffDim,
+            containerColor = CardWhite,
+            titleContentColor = InkBlack,
+            textContentColor = InkMuted,
             title = { Text("Add GIF URL", fontFamily = Lilita) },
             text = {
                 androidx.compose.foundation.text.BasicTextField(
@@ -129,19 +129,19 @@ fun StudioScreen(nav: NavController) {
                     onValueChange = { urlValue = it },
                     singleLine = true,
                     textStyle = androidx.compose.ui.text.TextStyle(
-                        fontFamily = InterTight, fontSize = 13.sp, color = OffWhite
+                        fontFamily = InterTight, fontWeight = FontWeight.Bold, fontSize = 13.sp, color = InkBlack
                     ),
-                    cursorBrush = androidx.compose.ui.graphics.SolidColor(Yellow),
+                    cursorBrush = androidx.compose.ui.graphics.SolidColor(InkBlack),
                     decorationBox = { inner ->
                         Box(
                             Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(Charcoal2)
-                                .border(2.dp, LineColor, RoundedCornerShape(12.dp))
+                                .background(CardWhite)
+                                .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
                                 .padding(horizontal = 12.dp, vertical = 10.dp)
                         ) {
-                            if (urlValue.isEmpty()) Text("https://…gif", color = OffFaint, fontSize = 13.sp, fontFamily = InterTight)
+                            if (urlValue.isEmpty()) Text("https://…gif", color = InkMuted, fontSize = 13.sp, fontWeight = FontWeight.Bold, fontFamily = InterTight)
                             inner()
                         }
                     }
@@ -153,11 +153,11 @@ fun StudioScreen(nav: NavController) {
                     if (urlValue.isNotBlank()) {
                         android.widget.Toast.makeText(context, "URL source ready", android.widget.Toast.LENGTH_SHORT).show()
                     }
-                }) { Text("ADD", color = Yellow, fontFamily = Mono, fontWeight = FontWeight.Bold) }
+                }) { Text("ADD", color = InkBlack, fontFamily = Mono, fontWeight = FontWeight.Bold) }
             },
             dismissButton = {
                 TextButton(onClick = { showUrlDialog = false }) {
-                    Text("CANCEL", color = OffFaint, fontFamily = Mono, fontWeight = FontWeight.Bold)
+                    Text("CANCEL", color = InkMuted, fontFamily = Mono, fontWeight = FontWeight.Bold)
                 }
             }
         )
@@ -184,21 +184,22 @@ private fun SourceButton(icon: ImageVector, label: String, onClick: () -> Unit) 
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(58.dp)
-                .clip(RoundedCornerShape(18.dp))
-                .background(Charcoal)
-                .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+                .size(50.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(CardWhite)
+                .hardShadow(3.dp)
+                .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
                 .clickableNoRipple { onClick() }
         ) {
-            Icon(icon, contentDescription = label, tint = Yellow, modifier = Modifier.size(24.dp))
+            Icon(icon, contentDescription = label, tint = InkBlack, modifier = Modifier.size(20.dp))
         }
         Text(
             label,
             fontFamily = InterTight,
             fontWeight = FontWeight.Bold,
             fontSize = 10.sp,
-            color = OffDim,
-            modifier = Modifier.padding(top = 7.dp)
+            color = InkBlack,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
@@ -211,25 +212,26 @@ private fun ToolCardBig(title: String, sub: String, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
-            .background(
-                androidx.compose.ui.graphics.Brush.linearGradient(listOf(Yellow, YellowDeep))
-            )
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             .pressable { onClick() }
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(38.dp)
-                .clip(RoundedCornerShape(11.dp))
-                .background(InkBlack)
+                .size(34.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(BgYellow)
+                .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
         ) {
-            Icon(Icons.Filled.PlayArrow, contentDescription = title, tint = Yellow, modifier = Modifier.size(18.dp))
+            Icon(Icons.Filled.PlayArrow, contentDescription = title, tint = InkBlack, modifier = Modifier.size(18.dp))
         }
-        Column(Modifier.padding(start = 14.dp)) {
-            Text(title, fontFamily = InterTight, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = InkBlack)
-            Text(sub, fontFamily = InterTight, fontSize = 10.5.sp, color = InkBlack.copy(alpha = 0.65f))
+        Column(Modifier.padding(start = 10.dp)) {
+            Text(title, fontFamily = InterTight, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp, color = InkBlack)
+            Text(sub, fontFamily = InterTight, fontWeight = FontWeight.Medium, fontSize = 10.sp, color = InkMuted)
         }
     }
 }
@@ -238,18 +240,20 @@ private fun ToolCardBig(title: String, sub: String, onClick: () -> Unit) {
 private fun ToolCard(id: String, title: String, icon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(18.dp))
-            .background(Charcoal)
-            .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             .pressable { onClick() }
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(38.dp)
-                .clip(RoundedCornerShape(11.dp))
-                .background(Yellow)
+                .size(34.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(BgYellow)
+                .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
         ) {
             Icon(icon, contentDescription = title, tint = InkBlack, modifier = Modifier.size(18.dp))
         }
@@ -257,9 +261,9 @@ private fun ToolCard(id: String, title: String, icon: ImageVector, modifier: Mod
             title,
             fontFamily = InterTight,
             fontWeight = FontWeight.ExtraBold,
-            fontSize = 13.5.sp,
-            color = OffWhite,
-            modifier = Modifier.padding(top = 10.dp)
+            fontSize = 12.sp,
+            color = InkBlack,
+            modifier = Modifier.padding(top = 6.dp)
         )
     }
 }
@@ -270,20 +274,21 @@ private fun ToolCard(id: String, title: String, icon: ImageVector, modifier: Mod
 fun ExportPanel() {
     Column(
         Modifier
-            .padding(horizontal = 20.dp, vertical = 0.dp)
+            .padding(horizontal = 18.dp, vertical = 0.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(Charcoal)
-            .border(2.dp, LineColor, RoundedCornerShape(20.dp))
-            .padding(18.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(16.dp))
+            .padding(14.dp)
     ) {
         Text(
-            "EXPORT",
+            "EXPORT FORMAT",
             fontFamily = Mono,
-            fontWeight = FontWeight.Bold,
-            fontSize = 10.sp,
-            color = OffFaint,
-            letterSpacing = 1.sp
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 9.5.sp,
+            color = InkMuted,
+            letterSpacing = 0.5.sp
         )
         // format chips
         Row(
@@ -296,18 +301,18 @@ fun ExportPanel() {
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .weight(1f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(if (on) Yellow else Charcoal2)
-                        .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (on) InkBlack else CardWhite)
+                        .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
                         .clickableNoRipple { Store.exportFormat = f }
-                        .padding(vertical = 10.dp)
+                        .padding(vertical = 7.dp)
                 ) {
                     Text(
                         f,
                         fontFamily = InterTight,
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = 11.5.sp,
-                        color = if (on) InkBlack else OffWhite
+                        fontSize = 10.sp,
+                        color = if (on) CardWhite else InkBlack
                     )
                 }
             }
@@ -316,11 +321,11 @@ fun ExportPanel() {
         Text(
             "PLATFORM PRESET",
             fontFamily = Mono,
-            fontWeight = FontWeight.Bold,
-            fontSize = 10.sp,
-            color = OffFaint,
-            letterSpacing = 1.sp,
-            modifier = Modifier.padding(top = 16.dp)
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 9.5.sp,
+            color = InkMuted,
+            letterSpacing = 0.5.sp,
+            modifier = Modifier.padding(top = 14.dp)
         )
         Box(Modifier.fillMaxWidth().padding(top = 10.dp)) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -330,24 +335,24 @@ fun ExportPanel() {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(if (on) Yellow else Charcoal2)
-                            .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(20.dp))
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(if (on) BgYellow else CardWhite)
+                            .border(2.dp, InkBlack, RoundedCornerShape(16.dp))
                             .clickableNoRipple { Store.platform = if (on) null else name }
-                            .padding(horizontal = 13.dp, vertical = 8.dp)
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
                     ) {
                         Text(
                             name,
                             fontFamily = InterTight,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = if (on) InkBlack else OffDim
+                            fontSize = 10.sp,
+                            color = InkBlack
                         )
                     }
                 }
             }
             // trailing fade signals more presets off-screen
-            EdgeFade(color = Charcoal)
+            EdgeFade(color = CardWhite)
         }
 
         // Colors slider: 2..256
@@ -370,14 +375,14 @@ fun ExportPanel() {
         )
 
         // batch row
-        Spacer(Modifier.height(18.dp))
-        Box(Modifier.fillMaxWidth().height(2.dp).background(LineColor))
+        Spacer(Modifier.height(14.dp))
+        DashedDivider()
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
         ) {
-            Text("Batch export", fontFamily = InterTight, fontWeight = FontWeight.Bold, fontSize = 13.sp, color = OffWhite)
+            Text("Batch Export", fontFamily = InterTight, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp, color = InkBlack)
             AppToggle(checked = Store.batch) { Store.batch = it }
         }
     }

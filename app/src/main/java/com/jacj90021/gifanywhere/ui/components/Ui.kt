@@ -12,6 +12,10 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.horizontalDrag
@@ -49,36 +53,115 @@ import com.jacj90021.gifanywhere.data.Content
 import com.jacj90021.gifanywhere.ui.theme.*
 import kotlinx.coroutines.launch
 
+/** Argb helper for drawing into native canvas (dashed divider). */
+private fun androidx.compose.ui.graphics.toArgb(c: Color): Int =
+    android.graphics.Color.argb(
+        (c.alpha * 255).toInt(),
+        (c.red * 255).toInt(),
+        (c.green * 255).toInt(),
+        (c.blue * 255).toInt()
+    )
+
+/* ---------- Neo-brutalist primitives ---------- */
+
+/** Hard offset shadow — the signature of the neo-brutalist look. */
+fun Modifier.hardShadow(depth: Dp = 3.dp, color: Color = InkBlack): Modifier = this.then(
+    Modifier.drawBehind {
+        if (depth.value > 0f) {
+            drawRoundRect(
+                color = color,
+                topLeft = Offset(depth.toPx(), depth.toPx()),
+                size = Size(size.width, size.height),
+                cornerRadius = CornerRadius(12.dp.toPx(), 12.dp.toPx())
+            )
+        }
+    }
+)
+
+/** White card: 2px ink border + hard shadow + 12dp corners. */
+@Composable
+fun NeoCard(
+    modifier: Modifier = Modifier,
+    corner: Dp = 12.dp,
+    shadow: Dp = 3.dp,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(corner))
+            .background(CardWhite)
+            .hardShadow(shadow)
+            .border(2.dp, InkBlack, RoundedCornerShape(corner)),
+        content = content
+    )
+}
+
+/** Dashed divider used inside white cards (matches the reference CSS). */
+@Composable
+fun DashedDivider(color: Color = InkBlack.copy(alpha = 0.12f)) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(1.5.dp)
+            .drawBehind {
+                val dash = 8.dp.toPx()
+                val gap = 6.dp.toPx()
+                val stroke = 1.5.dp.toPx()
+                val y = size.height / 2f
+                var x = 0f
+                val paint = android.graphics.Paint().apply {
+                    this.color = androidx.compose.ui.graphics.toArgb(color)
+                    strokeWidth = stroke
+                    style = android.graphics.Paint.Style.STROKE
+                    pathEffect = android.graphics.DashPathEffect(floatArrayOf(dash, gap))
+                    isAntiAlias = true
+                }
+                val path = android.graphics.Path().apply {
+                    moveTo(0f, y)
+                    lineTo(size.width, y)
+                }
+                drawContext.canvas.nativeCanvas.drawLine(0f, y, size.width, y, paint)
+            }
+    )
+}
+
 /* ---------- Header ---------- */
 
 @Composable
 fun H1(
     text: String,
-    size: TextUnit = 30.sp,
+    size: TextUnit = 26.sp,
     topPad: Dp = 14.dp,
     hPad: Dp = 20.dp,
     bottomPad: Dp = 0.dp,
     eyebrow: String? = null
 ) {
-    Column(Modifier.padding(start = hPad, end = hPad, top = topPad, bottom = bottomPad)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(start = hPad, end = hPad, top = topPad, bottom = bottomPad)
+    ) {
+        Text(
+            text = text.uppercase() + ".",
+            fontFamily = Lilita,
+            fontSize = size,
+            letterSpacing = (-0.5).sp,
+            color = InkBlack
+        )
         if (eyebrow != null) {
+            Spacer(Modifier.width(8.dp))
             Text(
                 eyebrow.uppercase(),
                 fontFamily = Mono,
-                fontWeight = FontWeight.Bold,
-                fontSize = 8.5.sp,
-                letterSpacing = 2.sp,
-                color = Yellow
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 9.sp,
+                letterSpacing = 1.5.sp,
+                color = InkBlack,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(InkBlack)
+                    .padding(horizontal = 7.dp, vertical = 3.dp)
             )
-            Spacer(Modifier.height(3.dp))
         }
-        Text(
-            text = text + ".",
-            fontFamily = Lilita,
-            fontSize = size,
-            letterSpacing = 0.3.sp,
-            color = OffWhite
-        )
     }
 }
 
@@ -105,10 +188,10 @@ fun MonoLabel(text: String, modifier: Modifier = Modifier, hPad: Dp = 20.dp, top
     Text(
         text = text.uppercase(),
         fontFamily = Mono,
-        fontSize = 10.sp,
-        fontWeight = FontWeight.Bold,
-        color = OffFaint,
-        letterSpacing = 1.sp,
+        fontSize = 9.5.sp,
+        fontWeight = FontWeight.ExtraBold,
+        color = InkMuted,
+        letterSpacing = 0.5.sp,
         modifier = modifier.padding(start = hPad, end = hPad, top = topPad, bottom = bottomPad)
     )
 }
@@ -127,26 +210,28 @@ fun SearchBar(
 ) {
     val focusSource = remember { MutableInteractionSource() }
     val focused by focusSource.collectIsFocusedAsState()
-    val borderColor by animateColorAsState(if (focused) Yellow else LineColor, tween(200), label = "searchBorder")
+    val borderColor by animateColorAsState(if (focused) InkBlack else InkBlack, tween(200), label = "searchBorder")
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .padding(start = hPad, end = hPad, top = topPad)
-            .clip(RoundedCornerShape(16.dp))
-            .background(Charcoal)
-            .border(2.dp, borderColor, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, borderColor, RoundedCornerShape(12.dp))
             .clickableNoRipple { onClick?.invoke() }
-            .padding(horizontal = 16.dp, vertical = 13.dp)
+            .padding(horizontal = 12.dp, vertical = 11.dp)
     ) {
-        Text("⌕", color = Yellow, fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
-        Spacer(Modifier.width(10.dp))
+        Text("⌕", color = InkBlack, fontWeight = FontWeight.ExtraBold, fontSize = 15.sp)
+        Spacer(Modifier.width(8.dp))
         if (onValueChange != null && value != null) {
             Box(Modifier.weight(1f)) {
                 if (value.isEmpty()) {
                     Text(
                         hint,
-                        color = OffFaint,
-                        fontSize = 13.5.sp,
+                        color = InkMuted,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
                         fontFamily = InterTight,
                         maxLines = 1
                     )
@@ -155,14 +240,21 @@ fun SearchBar(
                     value = value,
                     onValueChange = onValueChange,
                     singleLine = true,
-                    textStyle = TextStyle(fontFamily = InterTight, fontSize = 13.5.sp, color = OffWhite),
-                    cursorBrush = SolidColor(Yellow),
+                    textStyle = TextStyle(fontFamily = InterTight, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = InkBlack),
+                    cursorBrush = SolidColor(InkBlack),
                     interactionSource = focusSource,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
         } else {
-            Text(hint, color = OffDim, fontSize = 13.5.sp, fontFamily = InterTight, modifier = Modifier.weight(1f))
+            Text(
+                hint,
+                color = InkMuted,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = InterTight,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
@@ -173,28 +265,31 @@ fun SearchBar(
 fun Segment(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, topPad: Dp = 14.dp) {
     Row(
         modifier = modifier
-            .padding(start = 20.dp, end = 20.dp, top = topPad)
-            .clip(RoundedCornerShape(14.dp))
-            .background(Charcoal)
-            .padding(4.dp)
+            .padding(start = 18.dp, end = 18.dp, top = topPad)
+            .clip(RoundedCornerShape(12.dp))
+            .background(InkBlack.copy(alpha = 0.06f))
+            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
+            .padding(3.dp)
     ) {
         options.forEachIndexed { i, opt ->
             val on = i == selected
-            val bg by animateColorAsState(if (on) Yellow else Color.Transparent, tween(180), label = "segBg")
-            val fg by animateColorAsState(if (on) InkBlack else OffDim, tween(180), label = "segFg")
+            val bg by animateColorAsState(if (on) CardWhite else Color.Transparent, tween(180), label = "segBg")
+            val fg by animateColorAsState(if (on) InkBlack else InkMuted, tween(180), label = "segFg")
             Text(
-                text = opt,
+                text = opt.uppercase(),
                 fontFamily = InterTight,
-                fontWeight = FontWeight.Bold,
-                fontSize = 12.5.sp,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 10.sp,
                 color = fg,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(11.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .background(bg)
+                    .then(if (on) Modifier.hardShadow(2.dp) else Modifier)
+                    .then(if (on) Modifier.border(2.dp, InkBlack, RoundedCornerShape(8.dp)) else Modifier)
                     .pressable { onSelect(i) }
-                    .padding(vertical = 9.dp)
+                    .padding(vertical = 7.dp)
             )
         }
     }
@@ -211,23 +306,22 @@ fun ChipRow(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modif
         ) {
             items(options.size) { i ->
                 val on = i == selected
-                val bg by animateColorAsState(if (on) Yellow else Charcoal, tween(180), label = "chipBg")
-                val fg by animateColorAsState(if (on) InkBlack else OffWhite, tween(180), label = "chipFg")
-                val border by animateColorAsState(if (on) Yellow else LineColor, tween(180), label = "chipBorder")
+                val bg by animateColorAsState(if (on) InkBlack else CardWhite, tween(180), label = "chipBg")
+                val fg by animateColorAsState(if (on) CardWhite else InkBlack, tween(180), label = "chipFg")
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
                         .background(bg)
-                        .border(2.dp, border, RoundedCornerShape(20.dp))
+                        .border(2.dp, InkBlack, RoundedCornerShape(20.dp))
                         .pressable { onSelect(i) }
-                        .padding(horizontal = 15.dp, vertical = 9.dp)
+                        .padding(horizontal = 12.dp, vertical = 7.dp)
                 ) {
                     Text(
                         options[i],
                         fontFamily = InterTight,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
+                        fontSize = 10.sp,
                         color = fg
                     )
                 }
@@ -270,8 +364,19 @@ fun SliderRow(label: String, valueText: String, topPad: Dp = 12.dp) {
             .fillMaxWidth()
             .padding(top = topPad)
     ) {
-        Text(label, fontFamily = InterTight, fontWeight = FontWeight.SemiBold, fontSize = 12.sp, color = OffDim)
-        Text(valueText, fontFamily = Mono, fontWeight = FontWeight.Bold, fontSize = 11.5.sp, color = Yellow)
+        Text(label, fontFamily = InterTight, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = InkBlack)
+        Text(
+            valueText,
+            fontFamily = Mono,
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 10.sp,
+            color = InkBlack,
+            modifier = Modifier
+                .clip(RoundedCornerShape(4.dp))
+                .background(BgYellow)
+                .border(1.5.dp, InkBlack, RoundedCornerShape(4.dp))
+                .padding(horizontal = 6.dp, vertical = 1.dp)
+        )
     }
 }
 
@@ -287,21 +392,22 @@ fun GifSlider(progress: Float, onProgress: (Float) -> Unit, modifier: Modifier =
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(5.dp)
+                .height(6.dp)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(3.dp))
-                .background(Charcoal2)
+                .background(InkBlack.copy(alpha = 0.08f))
+                .border(2.dp, InkBlack, RoundedCornerShape(3.dp))
         )
         Box(
             Modifier
                 .fillMaxWidth(progress.coerceIn(0f, 1f))
-                .height(5.dp)
+                .height(6.dp)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(3.dp))
-                .background(Yellow)
+                .background(BgYellow)
         )
         val density = LocalDensity.current
-        val handleX = with(density) { (width.toPx() * progress.coerceIn(0f, 1f)).toDp() } - 8.dp
+        val handleX = with(density) { (width.toPx() * progress.coerceIn(0f, 1f)).toDp() } - 7.dp
         var dragging by remember { mutableStateOf(false) }
         val handleScale by animateFloatAsState(
             targetValue = if (dragging) 1.35f else 1f,
@@ -313,10 +419,10 @@ fun GifSlider(progress: Float, onProgress: (Float) -> Unit, modifier: Modifier =
                 .offset(x = handleX)
                 .align(Alignment.CenterStart)
                 .scale(handleScale)
-                .size(16.dp)
+                .size(14.dp)
                 .clip(CircleShape)
-                .background(Yellow)
-                .border(3.dp, Charcoal, CircleShape)
+                .background(CardWhite)
+                .border(2.dp, InkBlack, CircleShape)
         )
         Box(
             Modifier
@@ -352,40 +458,41 @@ fun TrimSlider(start: Float, end: Float, onChange: (Float, Float) -> Unit, modif
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(5.dp)
+                .height(6.dp)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(3.dp))
-                .background(Charcoal2)
+                .background(InkBlack.copy(alpha = 0.08f))
+                .border(2.dp, InkBlack, RoundedCornerShape(3.dp))
         )
         Box(
             Modifier
                 .offset(x = width * start.coerceIn(0f, 1f))
                 .width(width * (end - start).coerceIn(0f, 1f))
-                .height(5.dp)
+                .height(6.dp)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(3.dp))
-                .background(Yellow)
+                .background(BgYellow)
         )
         val density = LocalDensity.current
-        val sx = with(density) { (width.toPx() * start).toDp() } - 8.dp
-        val ex = with(density) { (width.toPx() * end).toDp() } - 8.dp
+        val sx = with(density) { (width.toPx() * start).toDp() } - 7.dp
+        val ex = with(density) { (width.toPx() * end).toDp() } - 7.dp
         Box(
             Modifier
                 .offset(x = sx)
                 .align(Alignment.CenterStart)
-                .size(16.dp)
+                .size(14.dp)
                 .clip(CircleShape)
-                .background(Yellow)
-                .border(3.dp, Charcoal, CircleShape)
+                .background(CardWhite)
+                .border(2.dp, InkBlack, CircleShape)
         )
         Box(
             Modifier
                 .offset(x = ex)
                 .align(Alignment.CenterStart)
-                .size(16.dp)
+                .size(14.dp)
                 .clip(CircleShape)
-                .background(Yellow)
-                .border(3.dp, Charcoal, CircleShape)
+                .background(CardWhite)
+                .border(2.dp, InkBlack, CircleShape)
         )
         Box(
             Modifier
@@ -417,21 +524,20 @@ fun TrimSlider(start: Float, end: Float, onChange: (Float, Float) -> Unit, modif
 @Composable
 fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
     val knobOffset by animateDpAsState(
-        targetValue = if (checked) 19.dp else 2.dp,
+        targetValue = if (checked) 19.dp else 1.dp,
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow, dampingRatio = Spring.DampingRatioMediumBouncy),
         label = "toggleKnob"
     )
     val haptics = LocalHapticFeedback.current
-    val bg by animateColorAsState(if (checked) Yellow else Charcoal2, tween(180), label = "tBg")
-    val border by animateColorAsState(if (checked) Yellow else LineColor, tween(180), label = "tBorder")
-    val knob by animateColorAsState(if (checked) InkBlack else OffFaint, tween(180), label = "tKnob")
+    val bg by animateColorAsState(if (checked) BgYellow else Color(0x1A0A0A0A), tween(180), label = "tBg")
+    val knob by animateColorAsState(if (checked) InkBlack else InkBlack, tween(180), label = "tKnob")
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
-            .size(width = 42.dp, height = 25.dp)
-            .clip(RoundedCornerShape(13.dp))
+            .size(width = 38.dp, height = 20.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(bg)
-            .border(2.dp, border, RoundedCornerShape(13.dp))
+            .border(2.dp, InkBlack, RoundedCornerShape(10.dp))
             .clickableNoRipple {
                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 onChange(!checked)
@@ -440,7 +546,7 @@ fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
         Box(
             Modifier
                 .offset(x = knobOffset)
-                .size(17.dp)
+                .size(14.dp)
                 .clip(CircleShape)
                 .background(knob)
         )
@@ -451,22 +557,23 @@ fun AppToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
 
 @Composable
 fun StatusPill(active: Boolean, text: String, onClick: (() -> Unit)? = null) {
-    val bg by animateColorAsState(if (active) Yellow else Charcoal2, tween(200), label = "pillBg")
+    val bg by animateColorAsState(if (active) BgYellow else CardWhite, tween(200), label = "pillBg")
+    val fg by animateColorAsState(if (active) InkBlack else InkMuted, tween(200), label = "pillFg")
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(bg)
-            .then(if (active) Modifier else Modifier.border(1.dp, LineColor, RoundedCornerShape(20.dp)))
+            .border(1.5.dp, InkBlack, RoundedCornerShape(12.dp))
             .clickableNoRipple { onClick?.invoke() }
-            .padding(horizontal = 9.dp, vertical = 4.dp)
+            .padding(horizontal = 7.dp, vertical = 3.dp)
     ) {
         Text(
             text.uppercase(),
             fontFamily = Mono,
-            fontWeight = FontWeight.Bold,
-            fontSize = 9.5.sp,
-            color = if (active) InkBlack else OffFaint
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 8.5.sp,
+            color = fg
         )
     }
 }
@@ -477,11 +584,12 @@ fun StatusPill(active: Boolean, text: String, onClick: (() -> Unit)? = null) {
 fun SettingsCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Column(
         modifier = modifier
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 18.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
-            .background(Charcoal)
-            .border(2.dp, LineColor, RoundedCornerShape(18.dp)),
+            .clip(RoundedCornerShape(16.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(16.dp)),
         content = content
     )
 }
@@ -497,32 +605,27 @@ fun SettingsRow(
     trailing: (@Composable () -> Unit)? = null
 ) {
     if (divider) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-                .background(LineColor)
-        )
+        DashedDivider()
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .clickableNoRipple { onClick?.invoke() }
-            .padding(horizontal = 16.dp, vertical = 15.dp)
+            .padding(horizontal = 14.dp, vertical = 12.dp)
     ) {
         Column(Modifier.weight(1f)) {
-            Text(title, fontFamily = InterTight, fontWeight = FontWeight.Bold, fontSize = 13.5.sp, color = OffWhite)
+            Text(title, fontFamily = InterTight, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp, color = InkBlack)
             if (sub != null) {
-                Text(sub, fontFamily = InterTight, fontSize = 11.sp, color = OffFaint, modifier = Modifier.padding(top = 2.dp))
+                Text(sub, fontFamily = InterTight, fontWeight = FontWeight.Medium, fontSize = 10.sp, color = InkMuted, modifier = Modifier.padding(top = 1.dp))
             }
         }
         if (value != null) {
-            Text(value, fontFamily = Mono, fontWeight = FontWeight.SemiBold, fontSize = 11.5.sp, color = OffDim)
+            Text(value, fontFamily = Mono, fontWeight = FontWeight.Bold, fontSize = 10.sp, color = InkMuted)
         }
         if (trailing != null) trailing()
         if (chevron) {
-            Text("›", color = OffFaint, fontSize = 18.sp, fontFamily = InterTight, modifier = Modifier.padding(start = 6.dp))
+            Text("›", color = InkMuted, fontSize = 18.sp, fontFamily = InterTight, modifier = Modifier.padding(start = 6.dp))
         }
     }
 }
@@ -554,10 +657,11 @@ fun ExportAction(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .padding(start = 20.dp, end = 20.dp, top = 18.dp, bottom = 22.dp)
+            .padding(start = 18.dp, end = 18.dp, top = 18.dp, bottom = 22.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Brush.linearGradient(listOf(Yellow, YellowDeep)))
+            .clip(RoundedCornerShape(12.dp))
+            .background(InkBlack)
+            .hardShadow(3.dp, CardWhite)
             .pressable(enabled = state == 0) {
                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 state = 1
@@ -583,7 +687,7 @@ fun ExportAction(
                     .background(InkBlack.copy(alpha = 0.25f))
             )
         }
-        Text(shown, fontFamily = Lilita, fontSize = 16.sp, letterSpacing = 0.3.sp, color = InkBlack)
+        Text(shown, fontFamily = Lilita, fontSize = 13.sp, letterSpacing = 0.5.sp, color = BgYellow)
     }
 }
 
@@ -613,14 +717,15 @@ fun YellowButton(label: String, modifier: Modifier = Modifier, onClick: () -> Un
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .padding(start = 20.dp, end = 20.dp, top = 18.dp, bottom = 22.dp)
+            .padding(start = 18.dp, end = 18.dp, top = 18.dp, bottom = 22.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Brush.linearGradient(listOf(Yellow, YellowDeep)))
+            .clip(RoundedCornerShape(12.dp))
+            .background(InkBlack)
+            .hardShadow(3.dp, CardWhite)
             .pressable { onClick() }
-            .padding(vertical = 16.dp)
+            .padding(vertical = 14.dp)
     ) {
-        Text(label, fontFamily = Lilita, fontSize = 16.sp, letterSpacing = 0.3.sp, color = InkBlack)
+        Text(label, fontFamily = Lilita, fontSize = 13.sp, letterSpacing = 0.5.sp, color = BgYellow)
     }
 }
 

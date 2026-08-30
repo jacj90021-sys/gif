@@ -78,7 +78,7 @@ private fun ToolScaffold(title: String, nav: NavController, content: @Composable
     Column(
         Modifier
             .fillMaxSize()
-            .background(InkBlack)
+            .background(BgYellow)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -88,19 +88,19 @@ private fun ToolScaffold(title: String, nav: NavController, content: @Composable
         ) {
             Text(
                 "←",
-                color = OffWhite,
+                color = InkBlack,
                 fontSize = 20.sp,
                 modifier = Modifier.clickableNoRipple { nav.popBackStack() }
             )
             Text(
                 buildAnnotatedString {
                     append(title)
-                    withStyle(SpanStyle(color = Yellow)) { append(".") }
+                    withStyle(SpanStyle(color = InkBlack)) { append(".") }
                 },
                 fontFamily = Lilita,
                 fontSize = 20.sp,
-                letterSpacing = 0.3.sp,
-                color = OffWhite,
+                letterSpacing = (-0.3).sp,
+                color = InkBlack,
                 modifier = Modifier.padding(start = 12.dp)
             )
         }
@@ -127,8 +127,8 @@ private fun VideoToGifTool(nav: NavController) {
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
                     .height(220.dp)
-                    .clip(RoundedCornerShape(18.dp))
-                    .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             )
             MonoLabel("Trim", hPad = 20.dp, topPad = 16.dp, bottomPad = 0.dp)
             TrimSlider(trimStart, trimEnd, { s, e -> trimStart = s; trimEnd = e }, modifier = Modifier.padding(horizontal = 20.dp))
@@ -171,7 +171,7 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                 fontFamily = Mono,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (recording) RecRed else OffFaint
+                color = if (recording) RecRed else InkMuted
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -203,7 +203,8 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                 Modifier
                     .size(44.dp)
                     .clip(CircleShape)
-                    .border(2.dp, LineColor, CircleShape)
+                    .background(CardWhite)
+                    .border(2.dp, InkBlack, CircleShape)
                     .clickableNoRipple { Toast.makeText(context, "Camera flipped", Toast.LENGTH_SHORT).show() }
             )
             Spacer(Modifier.width(26.dp))
@@ -212,8 +213,8 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                 modifier = Modifier
                     .size(74.dp)
                     .clip(CircleShape)
-                    .background(if (recording) RecRed else Yellow)
-                    .border(5.dp, Charcoal2, CircleShape)
+                    .background(if (recording) RecRed else BgYellow)
+                    .border(4.dp, InkBlack, CircleShape)
                     .then(if (recording) Modifier.alpha(pulseAlpha) else Modifier)
                     .clickableNoRipple {
                         if (!recording) {
@@ -230,7 +231,7 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                         Modifier
                             .size(26.dp)
                             .clip(RoundedCornerShape(6.dp))
-                            .background(OffWhite)
+                            .background(CardWhite)
                     )
                 }
             }
@@ -240,8 +241,8 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                 modifier = Modifier
                     .size(44.dp)
                     .clip(CircleShape)
-                    .background(Charcoal)
-                    .border(2.dp, LineColor, CircleShape)
+                    .background(CardWhite)
+                    .border(2.dp, InkBlack, CircleShape)
                     .clickableNoRipple { Toast.makeText(context, "Front / back camera", Toast.LENGTH_SHORT).show() }
             ) {
                 Text("🔄", fontSize = 16.sp)
@@ -299,7 +300,7 @@ private fun ScreenRecTool(nav: NavController, context: Context) {
                 else "TAP TO START — AUTO-CONVERTS TO GIF",
                 fontFamily = Mono,
                 fontSize = 12.sp,
-                color = if (recording) RecRed else OffFaint,
+                color = if (recording) RecRed else InkMuted,
                 modifier = if (recording) Modifier.alpha(pulseAlpha) else Modifier
             )
             Box(
@@ -321,7 +322,7 @@ private fun ScreenRecTool(nav: NavController, context: Context) {
                     Modifier
                         .size(26.dp)
                         .clip(RoundedCornerShape(6.dp))
-                        .background(OffWhite)
+                        .background(CardWhite)
                 )
             }
         }
@@ -360,8 +361,8 @@ private fun EditorTool(nav: NavController) {
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
                     .height(240.dp)
-                    .clip(RoundedCornerShape(18.dp))
-                    .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -442,9 +443,10 @@ private fun EditorCell(index: Int, name: String, selected: Boolean, modifier: Mo
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(48.dp)
-                .clip(RoundedCornerShape(18.dp))
-                .background(Charcoal)
-                .border(2.dp, if (selected) Yellow else LineColor, RoundedCornerShape(18.dp))
+                .clip(RoundedCornerShape(12.dp))
+                .background(CardWhite)
+                .hardShadow(2.dp)
+                .border(2.dp, if (selected) BgYellow else InkBlack, RoundedCornerShape(12.dp))
         ) {
             Text(Content.editorToolEmoji[index], fontSize = 17.sp)
         }
@@ -453,7 +455,7 @@ private fun EditorCell(index: Int, name: String, selected: Boolean, modifier: Mo
             fontFamily = InterTight,
             fontWeight = FontWeight.Bold,
             fontSize = 9.5.sp,
-            color = if (selected) Yellow else OffDim,
+            color = if (selected) InkBlack else InkMuted,
             modifier = Modifier.padding(top = 6.dp)
         )
     }
@@ -467,13 +469,13 @@ private fun ChipRowInline(options: List<String>, selected: Int, onSelect: (Int) 
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(if (on) Yellow else Charcoal2)
-                    .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(if (on) InkBlack else CardWhite)
+                    .border(2.dp, InkBlack, RoundedCornerShape(16.dp))
                     .clickableNoRipple { onSelect(i) }
-                    .padding(horizontal = 12.dp, vertical = 7.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
-                Text(opt, fontFamily = InterTight, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = if (on) InkBlack else OffDim)
+                Text(opt, fontFamily = InterTight, fontWeight = FontWeight.Bold, fontSize = 10.sp, color = if (on) CardWhite else InkBlack)
             }
         }
     }
@@ -498,7 +500,7 @@ private fun MemeTool(nav: NavController, context: Context) {
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
                     .height(260.dp)
-                    .clip(RoundedCornerShape(18.dp))
+                    .clip(RoundedCornerShape(12.dp))
                     .background(
                         Brush.linearGradient(
                             listOf(Content.grads[0].first, Content.grads[0].second),
@@ -506,7 +508,7 @@ private fun MemeTool(nav: NavController, context: Context) {
                             end = Offset(1000f, 1000f)
                         )
                     )
-                    .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+                    .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
                     .padding(14.dp)
             ) {
                 Column(
@@ -582,8 +584,8 @@ private fun StickerTool(nav: NavController, context: Context) {
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
                     .height(240.dp)
-                    .clip(RoundedCornerShape(18.dp))
-                    .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             ) {
                 Canvas(Modifier.fillMaxSize()) {
                     val cell = 16.dp.toPx()
@@ -592,7 +594,7 @@ private fun StickerTool(nav: NavController, context: Context) {
                         var c = 0
                         while (c * cell < size.width) {
                             drawRect(
-                                color = if ((r + c) % 2 == 0) Color(0xFF2B2B29) else Color(0xFF1F1F1E),
+                                color = if ((r + c) % 2 == 0) Color(0xFFE8E8E8) else Color(0xFFCCCCCC),
                                 topLeft = Offset(c * cell, r * cell),
                                 size = Size(cell, cell)
                             )
@@ -616,11 +618,11 @@ private fun StickerTool(nav: NavController, context: Context) {
                         Modifier
                             .size(150.dp)
                             .clip(CircleShape)
-                            .then(if (outline) Modifier.border(4.dp, OffWhite, CircleShape) else Modifier)
+                            .then(if (outline) Modifier.border(4.dp, CardWhite, CircleShape) else Modifier)
                     )
                     Canvas(Modifier.size(158.dp)) {
                         drawCircle(
-                            color = Yellow,
+                            color = InkBlack,
                             radius = (74.dp.toPx()) + 2.dp.toPx(),
                             style = Stroke(
                                 width = 3.dp.toPx(),
@@ -658,8 +660,8 @@ private fun MergeTool(nav: NavController, context: Context) {
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(RoundedCornerShape(18.dp))
-                    .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             ) {
                 when (layout) {
                     0 -> Row(Modifier.fillMaxSize()) {
@@ -694,7 +696,7 @@ private fun MergeTool(nav: NavController, context: Context) {
                         Modifier
                             .size(64.dp)
                             .clip(RoundedCornerShape(10.dp))
-                            .border(2.dp, if (selClip == i) Yellow else LineColor, RoundedCornerShape(10.dp))
+                            .border(2.dp, if (selClip == i) BgYellow else InkBlack, RoundedCornerShape(10.dp))
                             .clickableNoRipple { selClip = if (selClip == i) -1 else i }
                     )
                 }
@@ -704,19 +706,19 @@ private fun MergeTool(nav: NavController, context: Context) {
                         modifier = Modifier
                             .size(64.dp)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(Charcoal)
+                            .background(CardWhite)
                             .clickableNoRipple { clips.add(clips.size % Content.grads.size) }
                     ) {
                         Canvas(Modifier.fillMaxSize()) {
                             drawRoundRect(
-                                color = LineColor,
+                                color = InkBlack,
                                 style = Stroke(
                                     width = 2.dp.toPx(),
                                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f))
                                 )
                             )
                         }
-                        Text("+", fontSize = 22.sp, color = Yellow)
+                        Text("+", fontSize = 22.sp, color = InkBlack)
                     }
                 }
             }

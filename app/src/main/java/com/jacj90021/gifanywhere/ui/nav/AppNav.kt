@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.jacj90021.gifanywhere.ui.components.hardShadow
 import com.jacj90021.gifanywhere.ui.components.pressable
 import com.jacj90021.gifanywhere.ui.screens.DiscoverScreen
 import com.jacj90021.gifanywhere.ui.screens.LibraryScreen
@@ -63,8 +64,8 @@ fun AppNav(routeRequest: String? = null) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(InkBlack)
-            .statusBarsPadding()   // content starts below the status bar; black still renders behind it
+            .background(BgYellow)
+            .statusBarsPadding()   // content starts below the status bar; yellow still renders behind it
     ) {
         NavHost(
             navController = nav,
@@ -122,19 +123,19 @@ private fun BottomBar(current: String, onSelect: (String) -> Unit) {
             .fillMaxWidth()
             // background fills edge-to-edge (incl. behind the system nav bar),
             // then the bar content is padded above the system navigation inset
-            .background(Charcoal2)
+            .background(CardWhite)
             .navigationBarsPadding()
-            .border(2.dp, LineColor)
-            .padding(vertical = 12.dp, horizontal = 6.dp)
+            .border(2.dp, InkBlack)
+            .padding(vertical = 8.dp, horizontal = 8.dp)
     ) {
         tabs.forEach { tab ->
             val active = tab.id == current
             val pillColor by animateColorAsState(
-                if (active) Yellow else androidx.compose.ui.graphics.Color.Transparent,
+                if (active) BgYellow else androidx.compose.ui.graphics.Color.Transparent,
                 tween(200), label = "pill"
             )
             val iconColor by animateColorAsState(
-                if (active) InkBlack else OffFaint,
+                if (active) InkBlack else InkMuted,
                 tween(200), label = "tabIcon"
             )
             val iconScale by animateFloatAsState(
@@ -146,24 +147,26 @@ private fun BottomBar(current: String, onSelect: (String) -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(14.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .background(pillColor)
+                    .then(if (active) Modifier.hardShadow(2.dp) else Modifier)
+                    .then(if (active) Modifier.border(2.dp, InkBlack, RoundedCornerShape(8.dp)) else Modifier)
                     .pressable { onSelect(tab.id) }
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
             ) {
                 Icon(
                     tab.icon,
                     contentDescription = tab.label,
                     tint = iconColor,
-                    modifier = Modifier.size(21.dp).scale(iconScale)
+                    modifier = Modifier.size(17.dp).scale(iconScale)
                 )
                 Text(
                     tab.label,
                     fontFamily = Mono,
                     fontWeight = if (active) FontWeight.ExtraBold else FontWeight.Bold,
-                    fontSize = 9.5.sp,
+                    fontSize = 8.5.sp,
                     color = iconColor,
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier.padding(top = 3.dp)
                 )
             }
         }

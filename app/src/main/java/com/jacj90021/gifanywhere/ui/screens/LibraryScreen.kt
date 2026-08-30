@@ -38,8 +38,8 @@ fun LibraryScreen(nav: NavController) {
     val context = LocalContext.current
     var seg by rememberSaveable { mutableStateOf(0) }
 
-    Column(Modifier.fillMaxSize().background(InkBlack)) {
-        H1("LIBRARY", eyebrow = "GIF Anywhere")
+    Column(Modifier.fillMaxSize().background(BgYellow)) {
+        H1("LIBRARY", eyebrow = "KEEP")
         Segment(listOf("Favorites", "Recent", "Creations"), seg, { seg = it }, topPad = 12.dp)
 
         AnimatedContent(
@@ -124,35 +124,30 @@ private fun FolderGrid() {
                 contentAlignment = Alignment.BottomStart,
                 modifier = Modifier
                     .weight(1f)
-                    .height(100.dp)
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(
-                        androidx.compose.ui.graphics.Brush.linearGradient(
-                            listOf(Content.grads[3].first, Content.grads[3].second),
-                            start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                            end = androidx.compose.ui.geometry.Offset(1000f, 1000f)
-                        )
-                    )
-                    .border(2.dp, LineColor, RoundedCornerShape(18.dp))
+                    .height(80.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(CardWhite)
+                    .hardShadow(3.dp)
+                    .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
                     .clickableNoRipple {
                         Store.folders.add(Folder("New Folder ${Store.folders.size + 1}", 0, 4))
                     }
-                    .padding(14.dp)
+                    .padding(12.dp)
             ) {
                 Column {
                     Text(
                         "+",
                         fontFamily = Mono,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 9.5.sp,
-                        color = Yellow
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 9.sp,
+                        color = InkBlack
                     )
                     Text(
                         "New Folder",
                         fontFamily = InterTight,
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = 13.5.sp,
-                        color = OffWhite
+                        fontSize = 12.sp,
+                        color = InkBlack
                     )
                 }
             }
@@ -167,32 +162,34 @@ private fun FolderCard(f: Folder, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.BottomStart,
         modifier = modifier
-            .height(100.dp)
-            .clip(RoundedCornerShape(18.dp))
-            .background(
-                androidx.compose.ui.graphics.Brush.linearGradient(
-                    listOf(g.first, g.second),
-                    start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                    end = androidx.compose.ui.geometry.Offset(1000f, 1000f)
-                )
-            )
-            .border(2.dp, LineColor, RoundedCornerShape(18.dp))
-            .padding(14.dp)
+            .height(80.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
+            .padding(12.dp)
     ) {
+        GradientBox(f.gradIdx, Modifier.fillMaxSize())
         Text(
             f.count.toString(),
             fontFamily = Mono,
-            fontWeight = FontWeight.Bold,
-            fontSize = 9.5.sp,
-            color = Yellow,
-            modifier = Modifier.align(Alignment.TopEnd)
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 9.sp,
+            color = InkBlack,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .clip(RoundedCornerShape(6.dp))
+                .background(BgYellow)
+                .border(1.5.dp, InkBlack, RoundedCornerShape(6.dp))
+                .padding(horizontal = 5.dp, vertical = 1.dp)
         )
         Text(
             f.name,
             fontFamily = InterTight,
             fontWeight = FontWeight.ExtraBold,
-            fontSize = 13.5.sp,
-            color = OffWhite
+            fontSize = 12.sp,
+            color = OffWhite,
+            modifier = Modifier.padding(top = 40.dp)
         )
     }
 }
@@ -248,23 +245,25 @@ private fun CreationsGrid() {
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Charcoal)
-                            .border(2.dp, LineColor, RoundedCornerShape(16.dp))
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(CardWhite)
+                            .hardShadow(3.dp)
+                            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
                             .padding(12.dp)
                     ) {
                         Text(
                             c.name,
                             fontFamily = Mono,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.ExtraBold,
                             fontSize = 10.sp,
-                            color = Yellow
+                            color = InkBlack
                         )
                         Text(
                             c.tool.uppercase(),
                             fontFamily = Mono,
+                            fontWeight = FontWeight.Bold,
                             fontSize = 8.5.sp,
-                            color = OffFaint,
+                            color = InkMuted,
                             modifier = Modifier.padding(top = 4.dp)
                         )
                     }
@@ -285,20 +284,21 @@ private fun EmptyState(mark: String, title: String, sub: String) {
             .fillMaxWidth()
             .padding(horizontal = 40.dp, vertical = 40.dp)
     ) {
-        Text(mark, fontFamily = Lilita, fontSize = 64.sp, color = Charcoal, textAlign = TextAlign.Center)
+        Text(mark, fontFamily = Lilita, fontSize = 64.sp, color = InkBlack.copy(alpha = 0.15f), textAlign = TextAlign.Center)
         Text(
             title,
             fontFamily = Lilita,
             fontSize = 18.sp,
-            color = OffWhite,
+            color = InkBlack,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 18.dp)
         )
         Text(
             sub,
             fontFamily = InterTight,
+            fontWeight = FontWeight.Medium,
             fontSize = 12.5.sp,
-            color = OffFaint,
+            color = InkMuted,
             textAlign = TextAlign.Center,
             lineHeight = 19.sp,
             modifier = Modifier.padding(top = 8.dp)
@@ -321,18 +321,19 @@ private fun WallpaperSection(context: android.content.Context) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(if (on) Yellow else Charcoal)
-                    .border(2.dp, if (on) Yellow else LineColor, RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(if (on) BgYellow else CardWhite)
+                    .hardShadow(2.dp)
+                    .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
                     .clickableNoRipple { Store.wallTarget = t }
-                    .padding(vertical = 9.dp)
+                    .padding(vertical = 7.dp)
             ) {
                 Text(
                     t,
                     fontFamily = InterTight,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.5.sp,
-                    color = if (on) InkBlack else OffDim
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 10.sp,
+                    color = InkBlack
                 )
             }
         }
@@ -349,26 +350,27 @@ private fun WallpaperSection(context: android.content.Context) {
                     .aspectRatio(9f / 16f)
                     .clip(RoundedCornerShape(12.dp))
             ) {
-                GradientBox(gi, Modifier.fillMaxSize())
+                GradientBox(gi, Modifier.fillMaxSize().border(2.dp, InkBlack, RoundedCornerShape(12.dp)))
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(6.dp)
+                        .padding(4.dp)
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Yellow)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(BgYellow)
+                        .border(1.5.dp, InkBlack, RoundedCornerShape(4.dp))
                         .clickableNoRipple {
                             setLabel = "✓ SET"
                             Toast.makeText(context, "${Store.wallTarget} wallpaper set", Toast.LENGTH_SHORT).show()
                         }
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 2.dp)
                 ) {
                     Text(
                         setLabel,
                         fontFamily = InterTight,
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = 8.5.sp,
+                        fontSize = 8.sp,
                         color = InkBlack
                     )
                 }
@@ -383,64 +385,67 @@ private fun WallpaperSection(context: android.content.Context) {
 private fun StorageCard(context: android.content.Context) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 20.dp)
+            .padding(horizontal = 18.dp, vertical = 20.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
-            .background(Charcoal)
-            .border(2.dp, LineColor, RoundedCornerShape(18.dp))
-            .padding(16.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(16.dp))
+            .padding(14.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                "Cache storage",
+                "Cache Storage",
                 fontFamily = InterTight,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 13.5.sp,
-                color = OffWhite,
+                fontSize = 12.sp,
+                color = InkBlack,
                 modifier = Modifier.weight(1f)
             )
             Text(
                 "${Store.cacheMB.toInt()} MB",
                 fontFamily = Mono,
-                fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
-                color = Yellow
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 11.sp,
+                color = InkBlack
             )
         }
         Box(
             Modifier
-                .padding(top = 12.dp)
+                .padding(top = 10.dp)
                 .fillMaxWidth()
-                .height(8.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(Charcoal2)
+                .height(6.dp)
+                .clip(RoundedCornerShape(3.dp))
+                .background(InkBlack.copy(alpha = 0.08f))
+                .border(2.dp, InkBlack, RoundedCornerShape(3.dp))
         ) {
             Box(
                 Modifier
                     .fillMaxWidth((Store.cacheMB / 1000f).coerceIn(0.02f, 1f))
-                    .height(8.dp)
-                    .background(Yellow)
+                    .height(6.dp)
+                    .background(BgYellow)
             )
         }
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(top = 14.dp)
+                .padding(top = 12.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .border(2.dp, Yellow, RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(8.dp))
+                .background(CardWhite)
+                .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
                 .clickableNoRipple {
                     Store.cacheMB = 12f
                     Toast.makeText(context, "Cache cleared — 368 MB freed", Toast.LENGTH_SHORT).show()
                 }
-                .padding(vertical = 11.dp)
+                .padding(vertical = 8.dp)
         ) {
             Text(
                 "CLEAR CACHE",
                 fontFamily = InterTight,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 12.sp,
-                color = Yellow
+                fontSize = 10.sp,
+                color = InkBlack
             )
         }
     }

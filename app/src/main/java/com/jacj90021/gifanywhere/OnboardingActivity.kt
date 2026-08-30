@@ -90,7 +90,7 @@ fun OnboardingFlow(onDone: () -> Unit) {
     Box(
         Modifier
             .fillMaxSize()
-            .background(InkBlack)
+            .background(BgYellow)
             .systemBarsPadding()   // keep skip button and CTA clear of system bars
     ) {
         // Skip
@@ -99,7 +99,7 @@ fun OnboardingFlow(onDone: () -> Unit) {
             fontFamily = Mono,
             fontWeight = FontWeight.Bold,
             fontSize = 11.sp,
-            color = OffFaint,
+            color = InkMuted,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(24.dp)
@@ -131,7 +131,7 @@ fun OnboardingFlow(onDone: () -> Unit) {
                     fontSize = 26.sp,
                     lineHeight = 32.sp,
                     textAlign = TextAlign.Center,
-                    color = OffWhite,
+                    color = InkBlack,
                     modifier = Modifier.padding(top = 32.dp)
                 )
                 Text(
@@ -140,7 +140,7 @@ fun OnboardingFlow(onDone: () -> Unit) {
                     fontSize = 13.sp,
                     lineHeight = 20.sp,
                     textAlign = TextAlign.Center,
-                    color = OffDim,
+                    color = InkMuted,
                     modifier = Modifier.padding(top = 12.dp)
                 )
                 if (page == 1 && keyboardOk) {
@@ -173,7 +173,7 @@ fun OnboardingFlow(onDone: () -> Unit) {
                             modifier = Modifier
                                 .size(width = if (i == pagerState.currentPage) 22.dp else 7.dp, height = 7.dp)
                                 .clip(if (i == pagerState.currentPage) RoundedCornerShape(4.dp) else CircleShape)
-                                .background(if (i == pagerState.currentPage) Yellow else Charcoal2)
+                                .background(if (i == pagerState.currentPage) InkBlack else CardWhite)
                                 .clickableNoRipple { scope.launch { pagerState.animateScrollToPage(i) } }
                         )
                     }

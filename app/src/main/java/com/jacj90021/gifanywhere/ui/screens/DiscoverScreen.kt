@@ -34,7 +34,6 @@ import com.jacj90021.gifanywhere.data.Store
 import com.jacj90021.gifanywhere.ui.components.*
 import com.jacj90021.gifanywhere.ui.theme.*
 import com.jacj90021.gifanywhere.R
-
 @Composable
 fun DiscoverScreen(nav: NavController) {
     val context = LocalContext.current
@@ -46,8 +45,8 @@ fun DiscoverScreen(nav: NavController) {
     var sheetItemId by rememberSaveable { mutableStateOf<Int?>(null) }
     val sheetItem = sheetItemId?.let { id -> Content.gifs.firstOrNull { it.id == id } }
 
-    Column(Modifier.fillMaxSize().background(InkBlack)) {
-        H1("DISCOVER", eyebrow = "GIF Anywhere")
+    Column(Modifier.fillMaxSize().background(BgYellow)) {
+        H1("DISCOVER", eyebrow = "BETA")
         SearchBar(
             hint = "Search GIFs, stickers, memes...",
             value = query,
@@ -98,7 +97,7 @@ fun DiscoverScreen(nav: NavController) {
                         fontFamily = Mono,
                         fontWeight = FontWeight.Bold,
                         fontSize = 11.sp,
-                        color = OffFaint,
+                        color = InkMuted,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().padding(vertical = 60.dp)
                     )
@@ -114,7 +113,17 @@ fun DiscoverScreen(nav: NavController) {
 
 @Composable
 private fun GifCard(item: GifItem, onClick: () -> Unit) {
-    GradientBox(item.gradIdx, Modifier.fillMaxWidth().height(item.heightDp.dp).clip(RoundedCornerShape(16.dp)).clickableNoRipple { onClick() }) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(item.heightDp.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
+            .clickableNoRipple { onClick() }
+    ) {
+        GradientBox(item.gradIdx, Modifier.fillMaxSize())
         // bottom scrim so the caption stays readable over any thumbnail
         Box(
             Modifier
@@ -137,13 +146,23 @@ private fun GifCard(item: GifItem, onClick: () -> Unit) {
                 .align(Alignment.BottomStart)
                 .padding(start = 10.dp, bottom = 8.dp, end = 44.dp)
         )
-        LoopBadge(Modifier.align(Alignment.TopEnd).padding(8.dp))
+        LoopBadge(Modifier.align(Alignment.TopEnd).padding(6.dp))
     }
 }
 
 @Composable
 private fun RecentCard(item: RecentView, onClick: () -> Unit) {
-    GradientBox(item.gradIdx, Modifier.fillMaxWidth().height(item.heightDp.dp).clip(RoundedCornerShape(16.dp)).clickableNoRipple { onClick() }) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(item.heightDp.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardWhite)
+            .hardShadow(3.dp)
+            .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
+            .clickableNoRipple { onClick() }
+    ) {
+        GradientBox(item.gradIdx, Modifier.fillMaxSize())
         Box(
             Modifier
                 .align(Alignment.BottomCenter)
@@ -165,25 +184,25 @@ private fun RecentCard(item: RecentView, onClick: () -> Unit) {
                 .align(Alignment.BottomStart)
                 .padding(start = 10.dp, bottom = 8.dp, end = 44.dp)
         )
-        LoopBadge(Modifier.align(Alignment.TopEnd).padding(8.dp))
+        LoopBadge(Modifier.align(Alignment.TopEnd).padding(6.dp))
     }
 }
 
 @Composable
 fun LoopBadge(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Box(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .background(Color(0xB30A0A0A))
-            .padding(horizontal = 7.dp, vertical = 3.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(CardWhite)
+            .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
+            .padding(horizontal = 5.dp, vertical = 2.dp)
     ) {
         Text(
             "↻ LOOP",
             fontFamily = Mono,
-            fontWeight = FontWeight.Bold,
-            fontSize = 8.5.sp,
-            color = Yellow
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 8.sp,
+            color = InkBlack
         )
     }
 }
@@ -202,19 +221,27 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
     val context = LocalContext.current
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = Charcoal2,
+        containerColor = CardWhite,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         dragHandle = {
             Box(
                 Modifier
                     .padding(top = 10.dp, bottom = 4.dp)
-                    .size(width = 36.dp, height = 4.dp)
+                    .size(width = 32.dp, height = 4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(OffFaint)
+                    .background(InkBlack.copy(alpha = 0.3f))
             )
         }
     ) {
-        GradientBox(item.gradIdx, Modifier.padding(horizontal = 20.dp).fillMaxWidth().height(150.dp).clip(RoundedCornerShape(16.dp)))
+        GradientBox(
+            item.gradIdx,
+            Modifier
+                .padding(horizontal = 18.dp)
+                .fillMaxWidth()
+                .height(120.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
+        )
         Spacer(Modifier.height(18.dp))
         val rows = listOf(
             listOf("Send", "Save", "Favorite"),
@@ -232,10 +259,11 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .size(52.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(if (primary) Yellow else Charcoal)
-                                    .border(2.dp, if (primary) Yellow else LineColor, RoundedCornerShape(16.dp))
+                                    .size(44.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(if (primary) BgYellow else CardWhite)
+                                    .hardShadow(2.dp)
+                                    .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
                                     .clickableNoRipple {
                                         onDismiss()
                                         when (label) {
@@ -266,16 +294,16 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
                             ) {
                                 Text(
                                     sheetEmoji(label),
-                                    fontSize = 20.sp,
-                                    color = if (primary) InkBlack else Yellow
+                                    fontSize = 18.sp,
+                                    color = InkBlack
                                 )
                             }
                             Text(
                                 label,
                                 fontFamily = InterTight,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp,
-                                color = OffWhite,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 9.5.sp,
+                                color = InkBlack,
                                 modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)
                             )
                         }
