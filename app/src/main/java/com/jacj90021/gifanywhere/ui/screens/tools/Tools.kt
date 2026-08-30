@@ -159,7 +159,7 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                 .clip(RoundedCornerShape(18.dp))
                 .background(
                     Brush.linearGradient(
-                        listOf(Color(0xFF1E1E1E), Color(0xFF0A0A0A)),
+                        listOf(CardWhite, CardWhite),
                         start = Offset(0f, 0f),
                         end = Offset(500f, 1200f)
                     )
@@ -179,7 +179,8 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                     .align(Alignment.TopStart)
                     .padding(16.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .background(Color(0xB30A0A0A))
+                    .background(CardWhite)
+                    .border(1.5.dp, InkBlack, RoundedCornerShape(20.dp))
                     .padding(horizontal = 10.dp, vertical = 5.dp)
             ) {
                 Text(

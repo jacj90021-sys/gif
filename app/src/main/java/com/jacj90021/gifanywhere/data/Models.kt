@@ -17,12 +17,14 @@ data class RecentItem(val title: String, val gradIdx: Int)
 data class Creation(val name: String, val tool: String)
 
 object Content {
+    // Neo-brutalist light mockup: preview tiles are pure white (#FFFFFF).
+    // Five identical entries keep gradIdx variety semantics without dark tiles.
     val grads: List<Pair<Color, Color>> = listOf(
-        Color(0xFF3A3428) to Color(0xFF161615),
-        Color(0xFF2A3A34) to Color(0xFF101615),
-        Color(0xFF3A2A34) to Color(0xFF161015),
-        Color(0xFF34382A) to Color(0xFF151610),
-        Color(0xFF2A3438) to Color(0xFF101315)
+        Color(0xFFFFFFFF) to Color(0xFFFFFFFF),
+        Color(0xFFFFFFFF) to Color(0xFFFFFFFF),
+        Color(0xFFFFFFFF) to Color(0xFFFFFFFF),
+        Color(0xFFFFFFFF) to Color(0xFFFFFFFF),
+        Color(0xFFFFFFFF) to Color(0xFFFFFFFF)
     )
 
     val kinds = listOf("GIFs", "Stickers", "Memes")
