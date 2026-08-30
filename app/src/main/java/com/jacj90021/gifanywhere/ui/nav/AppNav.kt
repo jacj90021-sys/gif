@@ -15,11 +15,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -36,6 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.jacj90021.gifanywhere.ui.components.AppIcons
 import com.jacj90021.gifanywhere.ui.components.hardShadow
 import com.jacj90021.gifanywhere.ui.components.pressable
 import com.jacj90021.gifanywhere.ui.screens.DiscoverScreen
@@ -48,10 +44,10 @@ import com.jacj90021.gifanywhere.ui.theme.*
 private data class Tab(val id: String, val label: String, val icon: ImageVector)
 
 private val tabs = listOf(
-    Tab("discover", "DISCOVER", Icons.Filled.Search),
-    Tab("studio", "STUDIO", Icons.Filled.Edit),
-    Tab("library", "LIBRARY", Icons.Filled.PhotoLibrary),
-    Tab("settings", "SETTINGS", Icons.Filled.Settings)
+    Tab("discover", "DISCOVER", AppIcons.Discover),
+    Tab("studio", "STUDIO", AppIcons.Studio),
+    Tab("library", "LIBRARY", AppIcons.Library),
+    Tab("settings", "SETTINGS", AppIcons.Settings)
 )
 
 @Composable

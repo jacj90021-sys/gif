@@ -45,14 +45,13 @@ object Content {
         GifItem(12, "Confused math", "Memes", "Memes", 170, 1)
     )
 
-    val platforms = listOf("Discord", "Instagram", "WhatsApp", "Twitter", "Telegram")
-    val formats = listOf("GIF", "MP4", "WebP", "WebM", "APNG")
-    val sources = listOf("Gallery", "Camera", "Video", "URL", "Library", "Screen")
+    val platforms = listOf("Discord", "Instagram", "WhatsApp")
+    val formats = listOf("GIF", "MP4", "WebP", "WebM")
+    val sources = listOf("Gallery", "Camera", "Video", "URL")
     val videoEditChips = listOf("Trim", "Crop", "Speed", "Reverse", "Captions", "Stickers", "Filters")
     val mergeLayouts = listOf("Side by side", "Sequence", "Grid")
     val memeFonts = listOf("Impact", "Lilita", "Mono", "Handwritten")
     val editorTools = listOf("TRIM", "CROP", "SPEED", "REVERSE", "CAPTION", "STICKER", "FILTER", "WATERMARK")
-    val editorToolEmoji = listOf("✂️", "⬛", "⏩", "🔁", "💬", "⭐", "🎨", "💧")
 
     val kbTiles = listOf(
         "Excited nod" to 0, "Slow clap" to 1, "Mind blown" to 2, "Victory dance" to 3,

@@ -246,7 +246,12 @@ private fun BoomerangTool(nav: NavController, context: Context) {
                     .border(2.dp, InkBlack, CircleShape)
                     .clickableNoRipple { Toast.makeText(context, "Front / back camera", Toast.LENGTH_SHORT).show() }
             ) {
-                Text("🔄", fontSize = 16.sp)
+                androidx.compose.material3.Icon(
+                    AppIcons.RotateCcw,
+                    contentDescription = "Flip camera",
+                    tint = InkBlack,
+                    modifier = Modifier.size(16.dp)
+                )
             }
             Spacer(Modifier.width(26.dp))
         }
@@ -449,7 +454,12 @@ private fun EditorCell(index: Int, name: String, selected: Boolean, modifier: Mo
                 .hardShadow(2.dp)
                 .border(2.dp, if (selected) BgYellow else InkBlack, RoundedCornerShape(12.dp))
         ) {
-            Text(Content.editorToolEmoji[index], fontSize = 17.sp)
+            androidx.compose.material3.Icon(
+                editorToolIcon(index),
+                contentDescription = name,
+                tint = InkBlack,
+                modifier = Modifier.size(17.dp)
+            )
         }
         Text(
             name,
@@ -460,6 +470,17 @@ private fun EditorCell(index: Int, name: String, selected: Boolean, modifier: Mo
             modifier = Modifier.padding(top = 6.dp)
         )
     }
+}
+
+private fun editorToolIcon(index: Int): androidx.compose.ui.graphics.vector.ImageVector = when (index) {
+    0 -> AppIcons.Crop
+    1 -> AppIcons.Maximize
+    2 -> AppIcons.FastForward
+    3 -> AppIcons.RotateCcw
+    4 -> AppIcons.MessageCircle
+    5 -> AppIcons.Smile
+    6 -> AppIcons.Sliders
+    else -> AppIcons.Droplet
 }
 
 @Composable

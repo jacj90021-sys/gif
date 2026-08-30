@@ -39,7 +39,7 @@ fun LibraryScreen(nav: NavController) {
     var seg by rememberSaveable { mutableStateOf(0) }
 
     Column(Modifier.fillMaxSize().background(BgYellow)) {
-        H1("LIBRARY", eyebrow = "KEEP")
+        H1("LIBRARY")
         Segment(listOf("Favorites", "Recent", "Creations"), seg, { seg = it }, topPad = 12.dp)
 
         AnimatedContent(
@@ -59,7 +59,7 @@ fun LibraryScreen(nav: NavController) {
                 0 -> {
                     if (Store.folders.isEmpty()) {
                         EmptyState(
-                            mark = "♡",
+                            icon = AppIcons.Heart,
                             title = "NO FAVORITES YET.",
                             sub = "Tap the heart on any GIF in Discover and your keepers will collect here."
                         )
@@ -69,7 +69,7 @@ fun LibraryScreen(nav: NavController) {
                 1 -> {
                     if (Store.recent.isEmpty()) {
                         EmptyState(
-                            mark = "↻",
+                            icon = AppIcons.Repeat,
                             title = "NOTHING RECENT.",
                             sub = "Everything you view or save in the last 30 days will show up in this feed."
                         )
@@ -80,7 +80,7 @@ fun LibraryScreen(nav: NavController) {
                 else -> {
                     if (Store.creations.isEmpty()) {
                         EmptyState(
-                            mark = "✎",
+                            icon = AppIcons.Studio,
                             title = "YOUR STUDIO IS EMPTY.",
                             sub = "Trim a video, caption a meme or record your screen — everything you export lands right here."
                         )
@@ -91,7 +91,7 @@ fun LibraryScreen(nav: NavController) {
             }
 
             // ---- Wallpapers ----
-            H1("WALLPAPERS", size = 20.sp, topPad = 10.dp, bottomPad = 2.dp)
+            H1("WALLPAPERS", size = 18.sp, topPad = 10.dp, bottomPad = 2.dp)
             WallpaperSection(context)
             // ---- Storage ----
             StorageCard(context)
@@ -277,14 +277,19 @@ private fun CreationsGrid() {
 /* ---------- Empty states (unique copy per section) ---------- */
 
 @Composable
-private fun EmptyState(mark: String, title: String, sub: String) {
+private fun EmptyState(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, sub: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 40.dp, vertical = 40.dp)
     ) {
-        Text(mark, fontFamily = Lilita, fontSize = 64.sp, color = InkBlack.copy(alpha = 0.15f), textAlign = TextAlign.Center)
+        androidx.compose.material3.Icon(
+            icon,
+            contentDescription = null,
+            tint = InkBlack.copy(alpha = 0.15f),
+            modifier = Modifier.size(64.dp)
+        )
         Text(
             title,
             fontFamily = Lilita,

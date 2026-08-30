@@ -18,8 +18,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -124,22 +122,12 @@ private fun GifCard(item: GifItem, onClick: () -> Unit) {
             .clickableNoRipple { onClick() }
     ) {
         GradientBox(item.gradIdx, Modifier.fillMaxSize())
-        // bottom scrim so the caption stays readable over any thumbnail
-        Box(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(46.dp)
-                .background(
-                    Brush.verticalGradient(listOf(Color.Transparent, Color(0xB3000000)))
-                )
-        )
         Text(
             item.title,
             fontFamily = InterTight,
             fontWeight = FontWeight.Bold,
             fontSize = 10.sp,
-            color = OffWhite,
+            color = InkBlack,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
@@ -163,21 +151,12 @@ private fun RecentCard(item: RecentView, onClick: () -> Unit) {
             .clickableNoRipple { onClick() }
     ) {
         GradientBox(item.gradIdx, Modifier.fillMaxSize())
-        Box(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(46.dp)
-                .background(
-                    Brush.verticalGradient(listOf(Color.Transparent, Color(0xB3000000)))
-                )
-        )
         Text(
             item.title,
             fontFamily = InterTight,
             fontWeight = FontWeight.Bold,
             fontSize = 10.sp,
-            color = OffWhite,
+            color = InkBlack,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
@@ -292,10 +271,11 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
                                         }
                                     }
                             ) {
-                                Text(
-                                    sheetEmoji(label),
-                                    fontSize = 18.sp,
-                                    color = InkBlack
+                                androidx.compose.material3.Icon(
+                                    sheetIcon(label),
+                                    contentDescription = label,
+                                    tint = InkBlack,
+                                    modifier = Modifier.size(18.dp)
                                 )
                             }
                             Text(
@@ -315,11 +295,11 @@ fun ActionSheet(item: GifItem, onDismiss: () -> Unit, nav: NavController) {
     }
 }
 
-private fun sheetEmoji(label: String): String = when (label) {
-    "Send" -> "➤"
-    "Save" -> "⚑"
-    "Favorite" -> "♥"
-    "Edit" -> "✎"
-    "Convert" -> "⇄"
-    else -> "🖼"
+private fun sheetIcon(label: String): androidx.compose.ui.graphics.vector.ImageVector = when (label) {
+    "Send" -> AppIcons.Send
+    "Save" -> AppIcons.Bookmark
+    "Favorite" -> AppIcons.Heart
+    "Edit" -> AppIcons.Studio
+    "Convert" -> AppIcons.Repeat
+    else -> AppIcons.Image
 }

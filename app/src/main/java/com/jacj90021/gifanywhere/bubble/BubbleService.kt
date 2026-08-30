@@ -198,13 +198,13 @@ class BubbleService : Service() {
             val petal = FrameLayout(this)
             petal.background = GradientDrawable().apply {
                 shape = GradientDrawable.OVAL
-                setColor(Color.parseColor("#161615"))
-                setStroke(dp(2), Color.parseColor("#FFD400"))
+                setColor(Color.parseColor("#FFFFFF"))
+                setStroke(dp(2), Color.parseColor("#0A0A0A"))
             }
             petal.elevation = dp(6).toFloat()
             val tv = TextView(this).apply {
                 text = glyph
-                setTextColor(Color.parseColor("#FFD400"))
+                setTextColor(Color.parseColor("#0A0A0A"))
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 17f)
                 gravity = Gravity.CENTER
             }

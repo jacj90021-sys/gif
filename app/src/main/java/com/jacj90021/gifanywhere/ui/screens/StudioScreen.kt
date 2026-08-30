@@ -7,18 +7,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountTree
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.DesktopWindows
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -57,7 +45,7 @@ fun StudioScreen(nav: NavController) {
             .background(BgYellow)
             .verticalScroll(rememberScrollState())
     ) {
-        H1("STUDIO", eyebrow = "CREATE")
+        H1("STUDIO")
 
         // ---- Source picker row ----
         Box(Modifier.fillMaxWidth().padding(top = 14.dp)) {
@@ -78,7 +66,7 @@ fun StudioScreen(nav: NavController) {
             EdgeFade()
         }
 
-        // ---- 7-tile tools grid ----
+        // ---- 5-tile tools grid (exactly the mockup) ----
         Column(
             verticalArrangement = Arrangement.spacedBy(11.dp),
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp)
@@ -89,16 +77,12 @@ fun StudioScreen(nav: NavController) {
                 sub = "Trim any clip into a loop"
             ) { nav.navigate("tool/video") { launchSingleTop = true } }
             Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
-                ToolCard("boomerang", "Boomerang", Icons.Filled.PhotoCamera, Modifier.weight(1f)) { nav.navigate("tool/boomerang") { launchSingleTop = true } }
-                ToolCard("screenrec", "Screen Rec", Icons.Filled.DesktopWindows, Modifier.weight(1f)) { nav.navigate("tool/screenrec") { launchSingleTop = true } }
+                ToolCard("boomerang", "Boomerang", AppIcons.Repeat, Modifier.weight(1f)) { nav.navigate("tool/boomerang") { launchSingleTop = true } }
+                ToolCard("screenrec", "Screen Rec", AppIcons.Monitor, Modifier.weight(1f)) { nav.navigate("tool/screenrec") { launchSingleTop = true } }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
-                ToolCard("editor", "GIF Editor", Icons.Filled.Edit, Modifier.weight(1f)) { nav.navigate("tool/editor") { launchSingleTop = true } }
-                ToolCard("meme", "Meme Maker", Icons.Filled.Create, Modifier.weight(1f)) { nav.navigate("tool/meme") { launchSingleTop = true } }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(11.dp)) {
-                ToolCard("sticker", "Sticker Maker", Icons.Filled.Favorite, Modifier.weight(1f)) { nav.navigate("tool/sticker") { launchSingleTop = true } }
-                ToolCard("merge", "Merge / Combine", Icons.Filled.AccountTree, Modifier.weight(1f)) { nav.navigate("tool/merge") { launchSingleTop = true } }
+                ToolCard("editor", "GIF Editor", AppIcons.Studio, Modifier.weight(1f)) { nav.navigate("tool/editor") { launchSingleTop = true } }
+                ToolCard("meme", "Meme Maker", AppIcons.Meme, Modifier.weight(1f)) { nav.navigate("tool/meme") { launchSingleTop = true } }
             }
         }
 
@@ -167,12 +151,10 @@ fun StudioScreen(nav: NavController) {
 /* ---------- Source picker ---------- */
 
 private fun sourceIcon(name: String): ImageVector = when (name) {
-    "Gallery" -> Icons.Filled.Image
-    "Camera" -> Icons.Filled.PhotoCamera
-    "Video" -> Icons.Filled.Videocam
-    "URL" -> Icons.Filled.Link
-    "Library" -> Icons.Filled.PhotoLibrary
-    else -> Icons.Filled.DesktopWindows
+    "Gallery" -> AppIcons.Image
+    "Camera" -> AppIcons.Camera
+    "Video" -> AppIcons.Video
+    else -> AppIcons.Link
 }
 
 @Composable
@@ -227,7 +209,7 @@ private fun ToolCardBig(title: String, sub: String, onClick: () -> Unit) {
                 .background(BgYellow)
                 .border(2.dp, InkBlack, RoundedCornerShape(8.dp))
         ) {
-            Icon(Icons.Filled.PlayArrow, contentDescription = title, tint = InkBlack, modifier = Modifier.size(18.dp))
+            Icon(AppIcons.Play, contentDescription = title, tint = InkBlack, modifier = Modifier.size(18.dp))
         }
         Column(Modifier.padding(start = 10.dp)) {
             Text(title, fontFamily = InterTight, fontWeight = FontWeight.ExtraBold, fontSize = 12.sp, color = InkBlack)
@@ -355,23 +337,11 @@ fun ExportPanel() {
             EdgeFade(color = CardWhite)
         }
 
-        // Colors slider: 2..256
-        SliderRow("Colors", "${Store.colors.toInt()}")
-        GifSlider(
-            progress = (Store.colors - 2f) / 254f,
-            onProgress = { Store.colors = 2f + it * 254f }
-        )
-        // FPS slider: 5..60
-        SliderRow("FPS", "${Store.fps.toInt()}", topPad = 16.dp)
+        // FPS slider: 5..60 (mockup: single FPS Rate slider)
+        SliderRow("FPS Rate", "${Store.fps.toInt()}")
         GifSlider(
             progress = (Store.fps - 5f) / 55f,
             onProgress = { Store.fps = 5f + it * 55f }
-        )
-        // Target size slider: 0.5..20 MB
-        SliderRow("Target size", if (Store.targetMB < 1f) "${(Store.targetMB * 1000).toInt()} KB" else "${"%.1f".format(Store.targetMB)} MB", topPad = 16.dp)
-        GifSlider(
-            progress = (Store.targetMB - 0.5f) / 19.5f,
-            onProgress = { Store.targetMB = 0.5f + it * 19.5f }
         )
 
         // batch row

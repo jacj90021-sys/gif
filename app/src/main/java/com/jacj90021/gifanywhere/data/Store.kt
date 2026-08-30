@@ -30,7 +30,7 @@ object Store {
     var defaultFormat by mutableStateOf("Automatic")
     var quality by mutableStateOf("Auto")
     var batteryBehavior by mutableStateOf("Balanced")
-    var theme by mutableStateOf("Dark")
+    var theme by mutableStateOf("Light")
     var language by mutableStateOf("English")
 
     // Library
@@ -68,7 +68,7 @@ object Store {
         defaultFormat = p.getString("defaultFormat", "Automatic") ?: "Automatic"
         quality = p.getString("quality", "Auto") ?: "Auto"
         batteryBehavior = p.getString("batteryBehavior", "Balanced") ?: "Balanced"
-        theme = p.getString("theme", "Dark") ?: "Dark"
+        theme = p.getString("theme", "Light") ?: "Light"
         language = p.getString("language", "English") ?: "English"
         wallTarget = p.getString("wallTarget", "Home") ?: "Home"
         cacheMB = p.getFloat("cacheMB", 380f)

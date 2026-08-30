@@ -52,7 +52,7 @@ fun SettingsScreen(nav: NavController) {
             .background(BgYellow)
             .verticalScroll(rememberScrollState())
     ) {
-        H1("SETTINGS", eyebrow = "APP")
+        H1("SETTINGS")
 
         // ---- Delivery ----
         MonoLabel("Delivery", topPad = 8.dp)
@@ -92,32 +92,12 @@ fun SettingsScreen(nav: NavController) {
                     }
                 }
             )
-            if (Store.bubbleEnabled) {
-                SettingsRow(
-                    title = "Bubble position",
-                    value = "${Store.bubbleSide} · ${(Store.bubbleY * 100).toInt()}%",
-                    onClick = {
-                        Toast.makeText(context, "Drag the bubble anywhere to reposition", Toast.LENGTH_SHORT).show()
-                    }
-                )
-                SettingsRow(
-                    title = "Bubble opacity",
-                    value = "${Store.bubbleOpacity}%",
-                    onClick = {
-                        val options = listOf(100, 90, 80, 70)
-                        Store.bubbleOpacity = options[(options.indexOf(Store.bubbleOpacity) + 1) % options.size]
-                        // the service applies opacity in onStartCommand — no restart flash
-                        context.startService(Intent(context, BubbleService::class.java))
-                    }
-                )
-            }
         }
 
-        // ---- Export defaults ----
+        // ---- Export defaults (mockup: Default Format + Quality only) ----
         MonoLabel("Export defaults")
         val formats = listOf("Automatic", "GIF", "MP4", "WebP")
         val qualities = listOf("Auto", "High", "Balanced", "Small files")
-        val battery = listOf("Balanced", "Saver", "Full FPS")
         SettingsCard {
             SettingsRow(
                 title = "Default format",
@@ -132,17 +112,11 @@ fun SettingsScreen(nav: NavController) {
                 chevron = true,
                 onClick = { Store.quality = qualities[(qualities.indexOf(Store.quality) + 1) % qualities.size] }
             )
-            SettingsRow(
-                title = "Wallpaper battery behavior",
-                value = Store.batteryBehavior,
-                chevron = true,
-                onClick = { Store.batteryBehavior = battery[(battery.indexOf(Store.batteryBehavior) + 1) % battery.size] }
-            )
         }
 
-        // ---- General ----
+        // ---- General (mockup: Theme Light ›) ----
         MonoLabel("General")
-        val themes = listOf("Dark", "AMOLED")
+        val themes = listOf("Light", "Dark")
         val languages = listOf("English", "Español", "Français")
         SettingsCard {
             SettingsRow(
