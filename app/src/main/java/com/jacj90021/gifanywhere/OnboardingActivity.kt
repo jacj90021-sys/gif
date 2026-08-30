@@ -29,6 +29,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.jacj90021.gifanywhere.data.Store
 import com.jacj90021.gifanywhere.ui.components.clickableNoRipple
+import com.jacj90021.gifanywhere.ui.components.hardShadow
 import com.jacj90021.gifanywhere.ui.theme.*
 import kotlinx.coroutines.launch
 
