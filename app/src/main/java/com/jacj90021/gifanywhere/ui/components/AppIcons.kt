@@ -26,7 +26,7 @@ object AppIcons {
         val parser = PathParser()
         paths.forEach { p ->
             builder.addPath(
-                pathNodes = parser.parsePathString(p).toNodes(),
+                pathData = parser.parsePathString(p).toNodes(),
                 fill = null,
                 stroke = SolidColor(Color.Black),
                 strokeLineWidth = 2.2f,
