@@ -16,6 +16,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.horizontalDrag
@@ -53,14 +55,7 @@ import com.jacj90021.gifanywhere.data.Content
 import com.jacj90021.gifanywhere.ui.theme.*
 import kotlinx.coroutines.launch
 
-/** Argb helper for drawing into native canvas (dashed divider). */
-private fun androidx.compose.ui.graphics.toArgb(c: Color): Int =
-    android.graphics.Color.argb(
-        (c.alpha * 255).toInt(),
-        (c.red * 255).toInt(),
-        (c.green * 255).toInt(),
-        (c.blue * 255).toInt()
-    )
+
 
 /* ---------- Neo-brutalist primitives ---------- */
 
@@ -99,28 +94,21 @@ fun NeoCard(
 /** Dashed divider used inside white cards (matches the reference CSS). */
 @Composable
 fun DashedDivider(color: Color = InkBlack.copy(alpha = 0.12f)) {
+    val strokeColor = color
     Box(
         Modifier
             .fillMaxWidth()
             .height(1.5.dp)
             .drawBehind {
-                val dash = 8.dp.toPx()
-                val gap = 6.dp.toPx()
-                val stroke = 1.5.dp.toPx()
-                val y = size.height / 2f
-                var x = 0f
-                val paint = android.graphics.Paint().apply {
-                    this.color = androidx.compose.ui.graphics.toArgb(color)
-                    strokeWidth = stroke
-                    style = android.graphics.Paint.Style.STROKE
-                    pathEffect = android.graphics.DashPathEffect(floatArrayOf(dash, gap))
-                    isAntiAlias = true
-                }
-                val path = android.graphics.Path().apply {
-                    moveTo(0f, y)
-                    lineTo(size.width, y)
-                }
-                drawContext.canvas.nativeCanvas.drawLine(0f, y, size.width, y, paint)
+                drawLine(
+                    color = strokeColor,
+                    start = Offset(0f, size.height / 2f),
+                    end = Offset(size.width, size.height / 2f),
+                    strokeWidth = 1.5.dp.toPx(),
+                    pathEffect = PathEffect.dashPathEffect(
+                        floatArrayOf(8.dp.toPx(), 6.dp.toPx())
+                    )
+                )
             }
     )
 }
