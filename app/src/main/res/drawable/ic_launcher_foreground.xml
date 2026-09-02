@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Black rounded square with "GIF" feel: rounded rect -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M22,36 h64 a10,10 0 0 1 10,10 v26 a10,10 0 0 1 -10,10 h-64 a10,10 0 0 1 -10,-10 v-26 a10,10 0 0 1 10,-10 Z" />
+    <!-- Three vertical blocks suggesting letters -->
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M32,50 V72 H42 V50 Z" />
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M49,50 V72 H59 V50 Z" />
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M66,50 V72 H76 V50 Z" />
+</vector>

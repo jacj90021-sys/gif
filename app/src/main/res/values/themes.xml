@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.GifAnywhere" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">@color/black</item>
-        <item name="android:statusBarColor">@color/black</item>
-        <item name="android:navigationBarColor">@color/charcoal</item>
-        <item name="android:colorAccent">@color/yellow</item>
+    <style name="Theme.GifAnywhere" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/bg_yellow</item>
+        <item name="android:statusBarColor">@color/bg_yellow</item>
+        <item name="android:navigationBarColor">@color/card_white</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

@@ -12,8 +12,8 @@ android {
         applicationId = "com.jacj90021.gifanywhere"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 1
+        versionName = "1.0"
     }
 
     signingConfigs {
@@ -42,11 +42,10 @@ android {
         compose = true
     }
 
-    // Professional APK naming in CI artifacts: GIF-Anywhere-<version>.apk
     applicationVariants.all {
         outputs.all {
-            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl)
-                .outputFileName = "GIF-Anywhere-${versionName}.apk"
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+                "GIF-Anywhere-${versionName}.apk"
         }
     }
 }
@@ -54,6 +53,7 @@ android {
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2024.09.03"))
     implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
