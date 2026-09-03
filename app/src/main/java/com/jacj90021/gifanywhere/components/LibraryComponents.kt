@@ -1,5 +1,4 @@
 package com.jacj90021.gifanywhere.components
-import androidx.compose.runtime.Composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,25 +8,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.CardWhite
@@ -37,8 +31,6 @@ import com.jacj90021.gifanywhere.theme.RadiusLg
 import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusSm
 import com.jacj90021.gifanywhere.theme.Typography
-import com.jacj90021.gifanywhere.theme.RadiusLg
-import kotlin.math.roundToInt
 
 @Composable
 fun BoxCard(
@@ -47,15 +39,14 @@ fun BoxCard(
 ) {
     Surface(
         modifier = modifier
+            .fillMaxWidth()
             .padding(horizontal = 18.dp, vertical = 12.dp)
-            .clip(RadiusLg)
-            .background(CardWhite)
             .border(2.dp, InkBlack, RadiusLg),
         color = CardWhite,
+        shape = RadiusLg,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             content()
         }
@@ -67,27 +58,29 @@ data class FolderItem(
     val count: String,
 )
 
-data class WallItem(
-    val label: String = "SET",
-)
-
 @Composable
 fun FolderGrid(
     items: List<FolderItem>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            items.chunked(2).flatMap { row -> row }.forEachIndexed { idx, item ->
-                Box(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    FolderCard(item = item)
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 18.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        items.chunked(2).forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                rowItems.forEach { item ->
+                    Box(modifier = Modifier.weight(1f)) {
+                        FolderCard(item = item)
+                    }
+                }
+                repeat(2 - rowItems.size) {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
@@ -100,10 +93,9 @@ private fun FolderCard(item: FolderItem) {
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
-            .clip(RadiusMd)
-            .background(CardWhite)
             .border(2.dp, InkBlack, RadiusMd),
         color = CardWhite,
+        shape = RadiusMd,
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -112,10 +104,11 @@ private fun FolderCard(item: FolderItem) {
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(top = 8.dp, end = 8.dp)
+                    .padding(8.dp)
                     .background(BgYellow, RadiusSm)
                     .border(1.5.dp, InkBlack, RadiusSm)
                     .padding(horizontal = 5.dp, vertical = 1.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = item.count,
@@ -123,56 +116,68 @@ private fun FolderCard(item: FolderItem) {
                     color = InkBlack,
                 )
             }
-            Column(
+            Text(
+                text = item.name,
+                style = Typography.labelMedium,
+                color = InkBlack,
                 modifier = Modifier.padding(12.dp),
-                verticalArrangement = Arrangement.Bottom,
-            ) {
-                Text(
-                    text = item.name,
-                    style = Typography.labelMedium,
-                    color = InkBlack,
-                )
-            }
+            )
         }
     }
 }
+
+data class WallItem(
+    val label: String = "SET",
+)
 
 @Composable
 fun WallGrid(
     items: List<WallItem>,
     modifier: Modifier = Modifier,
 ) {
-    LazyVerticalGrid(
-        modifier = modifier,
-        columns = GridCells.Fixed(3),
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 18.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 18.dp),
     ) {
-        itemsIndexed(items) { _, item ->
-            Box(
-                modifier = Modifier
-                    .aspectRatio(9f / 16f)
-                    .clip(RadiusSm)
-                    .background(CardWhite)
-                    .border(2.dp, InkBlack, RadiusSm),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .fillMaxWidth()
-                        .padding(4.dp)
-                        .background(BgYellow, RadiusSm)
-                        .border(1.5.dp, InkBlack, RadiusSm),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = item.label,
-                        style = Typography.bodySmall,
-                        color = InkBlack,
-                    )
+        items.chunked(3).forEach { rowItems ->
+            rowItems.forEach { item ->
+                Box(modifier = Modifier.weight(1f)) {
+                    WallCell(item = item)
                 }
             }
+            repeat(3 - rowItems.size) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+@Composable
+private fun WallCell(item: WallItem) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(9f / 16f)
+            .background(CardWhite, RadiusSm)
+            .border(2.dp, InkBlack, RadiusSm),
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(4.dp)
+                .background(BgYellow, RoundedCornerShape(4.dp))
+                .border(1.5.dp, InkBlack, RoundedCornerShape(4.dp)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = item.label,
+                style = Typography.labelSmall,
+                color = InkBlack,
+                modifier = Modifier.padding(vertical = 2.dp),
+            )
         }
     }
 }
@@ -184,6 +189,7 @@ fun CacheCard(
     onClear: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val fraction = cachePercent.coerceIn(0f, 1f)
     BoxCard(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -191,7 +197,7 @@ fun CacheCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Cache Storage",
+                text = "CACHE STORAGE",
                 style = Typography.labelMedium,
                 color = InkBlack,
             )
@@ -206,14 +212,14 @@ fun CacheCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp)
-                .clip(RadiusSm)
+                .clip(RoundedCornerShape(3.dp))
                 .background(InkBlack.copy(alpha = 0.08f))
-                .border(2.dp, InkBlack, RadiusSm),
+                .border(2.dp, InkBlack, RoundedCornerShape(3.dp)),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(cachePercent.coerceIn(0f, 1f))
+                    .fillMaxWidth(fraction)
                     .background(BgYellow),
             )
         }

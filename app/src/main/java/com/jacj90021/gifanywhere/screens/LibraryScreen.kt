@@ -1,19 +1,16 @@
 package com.jacj90021.gifanywhere.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -34,23 +31,27 @@ fun LibraryScreen(
 ) {
     var selectedFolderIndex by remember { mutableIntStateOf(0) }
     var selectedWallIndex by remember { mutableIntStateOf(0) }
-    val wallItems = List(3) { WallItem() }
 
     Column(modifier = modifier.fillMaxSize()) {
         StatusBar()
         Spacer(modifier = Modifier.height(4.dp))
         TopBar(title = "LIBRARY")
         Spacer(modifier = Modifier.height(4.dp))
-
         SegmentedGroup(
             options = listOf("Favorites", "Recent", "Creations"),
             selectedIndex = selectedFolderIndex,
             onSelected = { selectedFolderIndex = it },
             modifier = Modifier.padding(horizontal = 18.dp),
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(2.dp))
 
-        Column(modifier = Modifier.padding(top = 4.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 12.dp),
+        ) {
             FolderGrid(
                 items = listOf(
                     FolderItem("Reactions", "42"),
@@ -58,23 +59,21 @@ fun LibraryScreen(
                     FolderItem("Sticker Packs", "7"),
                     FolderItem("New Folder", "+"),
                 ),
+                modifier = Modifier.padding(top = 10.dp),
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            TopBar(title = "WALLPAPERS", modifier = Modifier.padding(top = 0.dp))
-            Spacer(modifier = Modifier.height(2.dp))
+            TopBar(title = "WALLPAPERS", fontSizeSp = 18)
+            Spacer(modifier = Modifier.height(6.dp))
             SegmentedGroup(
                 options = listOf("Home", "Lock", "Both"),
                 selectedIndex = selectedWallIndex,
                 onSelected = { selectedWallIndex = it },
                 modifier = Modifier.padding(horizontal = 18.dp),
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            WallGrid(
-                items = wallItems,
-                modifier = Modifier.fillMaxSize(),
-            )
             Spacer(modifier = Modifier.height(12.dp))
+            WallGrid(items = List(3) { WallItem() })
+            Spacer(modifier = Modifier.height(4.dp))
             CacheCard(
                 cacheMegabytes = 380,
                 cachePercent = 0.38f,
@@ -83,4 +82,3 @@ fun LibraryScreen(
         }
     }
 }
-
