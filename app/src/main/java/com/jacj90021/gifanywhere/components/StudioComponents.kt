@@ -34,10 +34,15 @@ import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.InkMuted
+import com.jacj90021.gifanywhere.theme.Bold
+import com.jacj90021.gifanywhere.theme.Extra
+import com.jacj90021.gifanywhere.theme.MonoVal
 import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusPlatform
 import com.jacj90021.gifanywhere.theme.RadiusSm
-import com.jacj90021.gifanywhere.theme.Typography
+import com.jacj90021.gifanywhere.theme.Slider
+import com.jacj90021.gifanywhere.theme.Sub
+import com.jacj90021.gifanywhere.theme.Title
 
 @Composable
 fun SingleToggle(
@@ -107,7 +112,7 @@ fun SourceRow(
                 }
                 Text(
                     text = item.label,
-                    style = Typography.labelMedium,
+                    style = Bold,
                     color = InkBlack,
                     modifier = Modifier.padding(top = 4.dp),
                 )
@@ -184,13 +189,13 @@ private fun ToolCardBig(item: ToolItem) {
             Column {
                 Text(
                     text = item.name,
-                    style = Typography.labelMedium,
+                    style = Title,
                     color = InkBlack,
                 )
                 if (item.sub.isNotEmpty()) {
                     Text(
                         text = item.sub,
-                        style = Typography.bodySmall,
+                        style = Sub,
                         color = InkMuted,
                         modifier = Modifier.padding(top = 1.dp),
                     )
@@ -231,14 +236,14 @@ private fun ToolCardSmall(item: ToolItem) {
             }
             Text(
                 text = item.name,
-                style = Typography.labelMedium,
+                style = Title,
                 color = InkBlack,
                 modifier = Modifier.padding(top = 6.dp),
             )
             if (item.sub.isNotEmpty()) {
                 Text(
                     text = item.sub,
-                    style = Typography.bodySmall,
+                    style = Sub,
                     color = InkMuted,
                     modifier = Modifier.padding(top = 1.dp),
                 )
@@ -271,7 +276,7 @@ fun FormatChips(
             ) {
                 Text(
                     text = option,
-                    style = Typography.labelMedium,
+                    style = Extra,
                     color = if (isSelected) CardWhite else InkBlack,
                 )
             }
@@ -306,7 +311,7 @@ fun PlatformChips(
             ) {
                 Text(
                     text = option,
-                    style = Typography.labelMedium,
+                    style = Bold,
                     color = InkBlack,
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
                 )
@@ -331,12 +336,12 @@ fun SliderRow(
         ) {
             Text(
                 text = label,
-                style = Typography.labelMedium,
+                style = Slider,
                 color = InkBlack,
             )
             Text(
                 text = value,
-                style = Typography.labelSmall,
+                style = MonoVal,
                 color = InkBlack,
                 modifier = Modifier
                     .background(BgYellow, RoundedCornerShape(4.dp))

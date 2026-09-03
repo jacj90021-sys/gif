@@ -35,7 +35,7 @@ import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.InkMuted
 import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusSheet
-import com.jacj90021.gifanywhere.theme.Typography
+import com.jacj90021.gifanywhere.theme.Sheet
 
 data class SheetAction(
     val label: String,
@@ -157,7 +157,7 @@ private fun SheetActionCell(
         }
         Text(
             text = action.label.uppercase(),
-            style = Typography.bodySmall,
+            style = Sheet,
             color = InkBlack,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 4.dp),

@@ -41,7 +41,9 @@ import com.jacj90021.gifanywhere.components.SourceRow
 import com.jacj90021.gifanywhere.components.ToolItem
 import com.jacj90021.gifanywhere.components.ToolsGrid
 import com.jacj90021.gifanywhere.components.TopBar
-import com.jacj90021.gifanywhere.theme.Typography
+import com.jacj90021.gifanywhere.theme.Button
+import com.jacj90021.gifanywhere.theme.MonoLabel
+import com.jacj90021.gifanywhere.theme.Title
 
 @Composable
 fun StudioScreen(
@@ -94,7 +96,7 @@ fun StudioScreen(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "EXPORT FORMAT",
-                        style = Typography.bodySmall,
+                        style = MonoLabel,
                         color = Color(0xFF555555),
                         modifier = Modifier.padding(bottom = 8.dp),
                     )
@@ -106,7 +108,7 @@ fun StudioScreen(
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = "PLATFORM PRESET",
-                        style = Typography.bodySmall,
+                        style = MonoLabel,
                         color = Color(0xFF555555),
                         modifier = Modifier.padding(bottom = 2.dp),
                     )
@@ -140,8 +142,8 @@ fun StudioScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = "BATCH EXPORT",
-                            style = Typography.labelMedium,
+                            text = "Batch Export",
+                            style = Title,
                             color = Color.Black,
                         )
                         SingleToggle(
@@ -165,7 +167,7 @@ fun StudioScreen(
             ) {
                 Text(
                     text = "EXPORT GIF →",
-                    style = Typography.labelLarge,
+                    style = Button,
                     color = Color(0xFFFFD600),
                     modifier = Modifier.padding(vertical = 14.dp),
                     textAlign = TextAlign.Center,

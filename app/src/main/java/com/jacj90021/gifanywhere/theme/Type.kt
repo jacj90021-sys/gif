@@ -28,6 +28,165 @@ private val PlusJakartaSans = FontFamily(
     Font(R.font.plus_jakarta_sans, FontWeight.ExtraBold),
 )
 
+// ---- Sans styles (Plus Jakarta Sans) ----
+// These mirror the mockup, where body labels use the sans family.
+
+/** 24px h1 — DISCOVER / STUDIO / LIBRARY / SETTINGS. */
+val Headline = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 24.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = (-0.5).sp,
+)
+
+/** 18px section header — WALLPAPERS. */
+val HeadlineSm = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 18.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = (-0.5).sp,
+)
+
+/** 12px 800 — tool names, folder names, setting row titles, cache title. */
+val Title = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 12.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+/** 10px regular — tool subtitles and setting row subtitles. */
+val Sub = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 10.sp,
+    fontWeight = FontWeight.Normal,
+    letterSpacing = 0.sp,
+)
+
+/** 10px 700 — chips, platform chips, source labels, clear-cache. */
+val Bold = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 10.sp,
+    fontWeight = FontWeight.Bold,
+    letterSpacing = 0.sp,
+)
+
+/** 10px 800 — segmented control options, format chips. */
+val Extra = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 10.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+/** 11px 700 — slider label. */
+val Slider = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 11.sp,
+    fontWeight = FontWeight.Bold,
+    letterSpacing = 0.sp,
+)
+
+/** 13px 800 uppercase — primary buttons (EXPORT GIF →). */
+val Button = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 13.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.5.sp,
+)
+
+/** 9.5px 800 — action-sheet labels. */
+val Sheet = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 9.5.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+/** 12px 700 — search field text. */
+val Search = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 12.sp,
+    fontWeight = FontWeight.Bold,
+    letterSpacing = 0.sp,
+)
+
+/** 8px 800 — wallpaper SET tag. */
+val Wall = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontSize = 8.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+// ---- Mono styles (JetBrains Mono) ----
+// Only accents stay mono, exactly as in the mockup.
+
+/** 9px 800 — BETA tag, folder counts. */
+val MonoTag = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 9.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+/** 8px 800 — ↻ LOOP badge. */
+val MonoBadge = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 8.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+/** 8.5px 700 — bottom nav item labels. */
+val MonoNav = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 8.5.sp,
+    fontWeight = FontWeight.Bold,
+    letterSpacing = 0.sp,
+)
+
+/** 9.5px 800 uppercase w/ tracking — card labels (EXPORT FORMAT). */
+val MonoLabel = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 9.5.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.5.sp,
+)
+
+/** 10px 800 — slider value, batch value. */
+val MonoVal = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 10.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+/** 10px 700 — setting value text. */
+val MonoValMuted = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 10.sp,
+    fontWeight = FontWeight.Bold,
+    letterSpacing = 0.sp,
+)
+
+/** 11px 800 — cache size. */
+val MonoSize = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 11.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+/** 8.5px 800 — status pills. */
+val MonoPill = TextStyle(
+    fontFamily = JetBrainsMono,
+    fontSize = 8.5.sp,
+    fontWeight = FontWeight.ExtraBold,
+    letterSpacing = 0.sp,
+)
+
+// Material defaults so anything unstyled still fits the app.
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = PlusJakartaSans,
@@ -36,39 +195,10 @@ val Typography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
     ),
-    bodyMedium = TextStyle(
-        fontFamily = PlusJakartaSans,
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Medium,
-        lineHeight = 16.sp,
-        letterSpacing = 0.sp,
-    ),
-    labelLarge = TextStyle(
-        fontFamily = JetBrainsMono,
-        fontSize = 12.sp,
-        fontWeight = FontWeight.ExtraBold,
-        lineHeight = 16.sp,
-        letterSpacing = 1.5.sp,
-    ),
-    labelMedium = TextStyle(
-        fontFamily = JetBrainsMono,
-        fontSize = 10.sp,
-        fontWeight = FontWeight.ExtraBold,
-        lineHeight = 14.sp,
-        letterSpacing = 0.5.sp,
-    ),
-    bodySmall = TextStyle(
-        fontFamily = JetBrainsMono,
-        fontSize = 9.5.sp,
-        fontWeight = FontWeight.ExtraBold,
-        lineHeight = 13.sp,
-        letterSpacing = 0.sp,
-    ),
-    labelSmall = TextStyle(
-        fontFamily = JetBrainsMono,
-        fontSize = 8.5.sp,
-        fontWeight = FontWeight.ExtraBold,
-        lineHeight = 12.sp,
-        letterSpacing = 0.sp,
-    ),
+    bodyMedium = Search,
+    titleMedium = Title,
+    labelLarge = Button,
+    labelMedium = Extra,
+    bodySmall = Sub,
+    labelSmall = MonoTag,
 )

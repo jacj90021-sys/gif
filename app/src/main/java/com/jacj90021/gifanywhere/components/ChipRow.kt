@@ -15,9 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.jacj90021.gifanywhere.theme.Bold
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
-import com.jacj90021.gifanywhere.theme.Typography
 
 @Composable
 fun ChipRow(
@@ -46,7 +46,7 @@ fun ChipRow(
             ) {
                 Text(
                     text = option,
-                    style = Typography.labelMedium,
+                    style = Bold,
                     color = if (isSelected) CardWhite else InkBlack,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                 )

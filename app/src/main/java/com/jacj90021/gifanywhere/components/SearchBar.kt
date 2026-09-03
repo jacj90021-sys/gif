@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
-import com.jacj90021.gifanywhere.theme.Typography
+import com.jacj90021.gifanywhere.theme.Search
 
 @Composable
 fun SearchBar(
@@ -52,14 +52,14 @@ fun SearchBar(
                 value = value,
                 onValueChange = onValueChange,
                 singleLine = true,
-                textStyle = Typography.bodyMedium.copy(color = InkBlack),
+                textStyle = Search.copy(color = InkBlack),
                 cursorBrush = SolidColor(InkBlack),
                 modifier = Modifier.fillMaxWidth(),
             )
             if (value.isEmpty()) {
                 Text(
                     text = placeholder,
-                    style = Typography.bodyMedium,
+                    style = Search,
                     color = InkBlack.copy(alpha = 0.6f),
                 )
             }

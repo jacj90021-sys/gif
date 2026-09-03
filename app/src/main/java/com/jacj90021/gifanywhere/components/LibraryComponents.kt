@@ -27,10 +27,14 @@ import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.InkMuted
+import com.jacj90021.gifanywhere.theme.Bold
+import com.jacj90021.gifanywhere.theme.MonoSize
+import com.jacj90021.gifanywhere.theme.MonoTag
 import com.jacj90021.gifanywhere.theme.RadiusLg
 import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusSm
-import com.jacj90021.gifanywhere.theme.Typography
+import com.jacj90021.gifanywhere.theme.Title
+import com.jacj90021.gifanywhere.theme.Wall
 
 @Composable
 fun BoxCard(
@@ -112,13 +116,13 @@ private fun FolderCard(item: FolderItem) {
             ) {
                 Text(
                     text = item.count,
-                    style = Typography.bodySmall,
+                    style = MonoTag,
                     color = InkBlack,
                 )
             }
             Text(
                 text = item.name,
-                style = Typography.labelMedium,
+                style = Title,
                 color = InkBlack,
                 modifier = Modifier.padding(12.dp),
             )
@@ -174,7 +178,7 @@ private fun WallCell(item: WallItem) {
         ) {
             Text(
                 text = item.label,
-                style = Typography.labelSmall,
+                style = Wall,
                 color = InkBlack,
                 modifier = Modifier.padding(vertical = 2.dp),
             )
@@ -197,13 +201,13 @@ fun CacheCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "CACHE STORAGE",
-                style = Typography.labelMedium,
+                text = "Cache Storage",
+                style = Title,
                 color = InkBlack,
             )
             Text(
                 text = "$cacheMegabytes MB",
-                style = Typography.labelSmall,
+                style = MonoSize,
                 color = InkBlack,
             )
         }
@@ -236,7 +240,7 @@ fun CacheCard(
         ) {
             Text(
                 text = "CLEAR CACHE",
-                style = Typography.labelMedium,
+                style = Bold,
                 color = InkBlack,
             )
         }

@@ -27,8 +27,12 @@ import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.InkMuted
+import com.jacj90021.gifanywhere.theme.MonoLabel
+import com.jacj90021.gifanywhere.theme.MonoPill
+import com.jacj90021.gifanywhere.theme.MonoValMuted
 import com.jacj90021.gifanywhere.theme.RadiusLg
-import com.jacj90021.gifanywhere.theme.Typography
+import com.jacj90021.gifanywhere.theme.Sub
+import com.jacj90021.gifanywhere.theme.Title
 
 data class SetRowItem(
     val title: String,
@@ -86,13 +90,13 @@ fun SetRow(
             ) {
                 Text(
                     text = item.title,
-                    style = Typography.labelMedium,
+                    style = Title,
                     color = InkBlack,
                 )
                 if (item.sub != null) {
                     Text(
                         text = item.sub,
-                        style = Typography.bodySmall,
+                        style = Sub,
                         color = InkMuted,
                         modifier = Modifier.padding(top = 1.dp),
                     )
@@ -109,7 +113,7 @@ fun SetRow(
                     ) {
                         Text(
                             text = item.statusText,
-                            style = Typography.labelSmall,
+                            style = MonoPill,
                             color = if (item.statusActive) InkBlack else InkMuted,
                             modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp),
                         )
@@ -118,7 +122,7 @@ fun SetRow(
                 item.valueText != null -> {
                     Text(
                         text = item.valueText,
-                        style = Typography.labelSmall,
+                        style = MonoValMuted,
                         color = InkMuted,
                         modifier = Modifier.padding(start = 8.dp),
                     )
@@ -170,7 +174,7 @@ fun CardLabel(
 ) {
     Text(
         text = text,
-        style = Typography.bodySmall,
+        style = MonoLabel,
         color = InkMuted,
         modifier = modifier.padding(start = 18.dp, end = 18.dp, top = 14.dp, bottom = 6.dp),
     )

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.jacj90021.gifanywhere.R
 import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.InkBlack
-import com.jacj90021.gifanywhere.theme.Typography
+import com.jacj90021.gifanywhere.theme.MonoTag
 
 @Composable
 fun TopBar(
@@ -53,7 +53,7 @@ fun TopBar(
             ) {
                 Text(
                     text = tag,
-                    style = Typography.bodySmall,
+                    style = MonoTag,
                     color = BgYellow,
                 )
             }

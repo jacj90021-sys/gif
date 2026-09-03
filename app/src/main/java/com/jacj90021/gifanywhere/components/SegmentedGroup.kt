@@ -14,10 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.CardWhite
+import com.jacj90021.gifanywhere.theme.Extra
 import com.jacj90021.gifanywhere.theme.InkBlack
-import com.jacj90021.gifanywhere.theme.Typography
 
 @Composable
 fun SegmentedGroup(
@@ -53,8 +52,8 @@ fun SegmentedGroup(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = option,
-                    style = Typography.labelMedium,
+                    text = option.uppercase(),
+                    style = Extra,
                     color = if (isSelected) InkBlack else InkBlack.copy(alpha = 0.6f),
                 )
             }

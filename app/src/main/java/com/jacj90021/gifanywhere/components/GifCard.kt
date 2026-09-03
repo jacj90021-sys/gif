@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
+import com.jacj90021.gifanywhere.theme.MonoBadge
 import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusSm
-import com.jacj90021.gifanywhere.theme.Typography
 
 @Composable
 fun GifCard(
@@ -71,7 +71,7 @@ fun GifCard(
         ) {
             Text(
                 text = "↻ LOOP",
-                style = Typography.bodySmall,
+                style = MonoBadge,
                 color = InkBlack,
             )
         }
