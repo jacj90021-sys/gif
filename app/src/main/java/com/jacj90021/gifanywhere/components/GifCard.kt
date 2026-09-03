@@ -67,12 +67,14 @@ fun GifCard(
                 .padding(6.dp)
                 .background(CardWhite, RadiusSm)
                 .border(2.dp, InkBlack, RadiusSm)
-                .padding(horizontal = 5.dp, vertical = 2.dp),
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "↻ LOOP",
                 style = MonoBadge,
                 color = InkBlack,
+                maxLines = 1,
             )
         }
     }

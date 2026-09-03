@@ -48,13 +48,14 @@ fun TopBar(
             Box(
                 modifier = Modifier
                     .background(InkBlack, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 7.dp, vertical = 3.dp),
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = tag,
-                    style = MonoTag,
+                    style = MonoTag.copy(fontSize = 10.sp),
                     color = BgYellow,
+                    maxLines = 1,
                 )
             }
         }

@@ -29,7 +29,6 @@ private val PlusJakartaSans = FontFamily(
 )
 
 // ---- Sans styles (Plus Jakarta Sans) ----
-// These mirror the mockup, where body labels use the sans family.
 
 /** 24px h1 — DISCOVER / STUDIO / LIBRARY / SETTINGS. */
 val Headline = TextStyle(
@@ -52,6 +51,7 @@ val Title = TextStyle(
     fontFamily = PlusJakartaSans,
     fontSize = 12.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 16.sp,
     letterSpacing = 0.sp,
 )
 
@@ -60,6 +60,7 @@ val Sub = TextStyle(
     fontFamily = PlusJakartaSans,
     fontSize = 10.sp,
     fontWeight = FontWeight.Normal,
+    lineHeight = 14.sp,
     letterSpacing = 0.sp,
 )
 
@@ -68,14 +69,16 @@ val Bold = TextStyle(
     fontFamily = PlusJakartaSans,
     fontSize = 10.sp,
     fontWeight = FontWeight.Bold,
+    lineHeight = 14.sp,
     letterSpacing = 0.sp,
 )
 
-/** 10px 800 — segmented control options, format chips. */
+/** 11px 800 — segmented control options, format chips. */
 val Extra = TextStyle(
     fontFamily = PlusJakartaSans,
-    fontSize = 10.sp,
+    fontSize = 11.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 15.sp,
     letterSpacing = 0.sp,
 )
 
@@ -84,6 +87,7 @@ val Slider = TextStyle(
     fontFamily = PlusJakartaSans,
     fontSize = 11.sp,
     fontWeight = FontWeight.Bold,
+    lineHeight = 15.sp,
     letterSpacing = 0.sp,
 )
 
@@ -92,14 +96,16 @@ val Button = TextStyle(
     fontFamily = PlusJakartaSans,
     fontSize = 13.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 18.sp,
     letterSpacing = 0.5.sp,
 )
 
-/** 9.5px 800 — action-sheet labels. */
+/** 10px 800 — action-sheet labels. */
 val Sheet = TextStyle(
     fontFamily = PlusJakartaSans,
-    fontSize = 9.5.sp,
+    fontSize = 10.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 14.sp,
     letterSpacing = 0.sp,
 )
 
@@ -108,33 +114,36 @@ val Search = TextStyle(
     fontFamily = PlusJakartaSans,
     fontSize = 12.sp,
     fontWeight = FontWeight.Bold,
+    lineHeight = 16.sp,
     letterSpacing = 0.sp,
 )
 
-/** 8px 800 — wallpaper SET tag. */
+/** 9px 800 — wallpaper SET tag. */
 val Wall = TextStyle(
     fontFamily = PlusJakartaSans,
-    fontSize = 8.sp,
+    fontSize = 9.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 13.sp,
     letterSpacing = 0.sp,
 )
 
 // ---- Mono styles (JetBrains Mono) ----
-// Only accents stay mono, exactly as in the mockup.
 
 /** 9px 800 — BETA tag, folder counts. */
 val MonoTag = TextStyle(
     fontFamily = JetBrainsMono,
     fontSize = 9.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 12.sp,
     letterSpacing = 0.sp,
 )
 
-/** 8px 800 — ↻ LOOP badge. */
+/** 10px 800 — ↻ LOOP badge and feature badges. */
 val MonoBadge = TextStyle(
     fontFamily = JetBrainsMono,
-    fontSize = 8.sp,
+    fontSize = 10.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 14.sp,
     letterSpacing = 0.sp,
 )
 
@@ -143,6 +152,7 @@ val MonoNav = TextStyle(
     fontFamily = JetBrainsMono,
     fontSize = 8.5.sp,
     fontWeight = FontWeight.Bold,
+    lineHeight = 12.sp,
     letterSpacing = 0.sp,
 )
 
@@ -151,14 +161,16 @@ val MonoLabel = TextStyle(
     fontFamily = JetBrainsMono,
     fontSize = 9.5.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 13.sp,
     letterSpacing = 0.5.sp,
 )
 
-/** 10px 800 — slider value, batch value. */
+/** 10px 800 — slider value. */
 val MonoVal = TextStyle(
     fontFamily = JetBrainsMono,
     fontSize = 10.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 14.sp,
     letterSpacing = 0.sp,
 )
 
@@ -167,6 +179,7 @@ val MonoValMuted = TextStyle(
     fontFamily = JetBrainsMono,
     fontSize = 10.sp,
     fontWeight = FontWeight.Bold,
+    lineHeight = 14.sp,
     letterSpacing = 0.sp,
 )
 
@@ -175,6 +188,7 @@ val MonoSize = TextStyle(
     fontFamily = JetBrainsMono,
     fontSize = 11.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 15.sp,
     letterSpacing = 0.sp,
 )
 
@@ -183,6 +197,7 @@ val MonoPill = TextStyle(
     fontFamily = JetBrainsMono,
     fontSize = 8.5.sp,
     fontWeight = FontWeight.ExtraBold,
+    lineHeight = 12.sp,
     letterSpacing = 0.sp,
 )
 

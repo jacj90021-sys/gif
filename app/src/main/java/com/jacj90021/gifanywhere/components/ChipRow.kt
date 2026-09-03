@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.theme.Bold
 import com.jacj90021.gifanywhere.theme.CardWhite
@@ -28,14 +29,13 @@ fun ChipRow(
 ) {
     LazyRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp),
     ) {
         itemsIndexed(options) { index, option ->
             val isSelected = index in selectedIndices
             Box(
                 modifier = Modifier
-                    .padding(vertical = 6.dp)
                     .background(
                         if (isSelected) InkBlack else CardWhite,
                         RoundedCornerShape(20.dp),
@@ -48,7 +48,9 @@ fun ChipRow(
                     text = option,
                     style = Bold,
                     color = if (isSelected) CardWhite else InkBlack,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                 )
             }
         }
