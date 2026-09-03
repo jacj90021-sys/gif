@@ -33,15 +33,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.jacj90021.gifanywhere.components.ActionSheet
-import com.jacj90021.gifanywhere.components.ActionSheet.sheetActions
-import com.jacj90021.gifanywhere.components.ActionSheet.buildSheetIcon
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
+import com.jacj90021.gifanywhere.components.sheetActions
 import com.jacj90021.gifanywhere.components.ChipRow
 import com.jacj90021.gifanywhere.components.GifCard
 import com.jacj90021.gifanywhere.components.SearchBar
 import com.jacj90021.gifanywhere.components.SegmentedGroup
 import com.jacj90021.gifanywhere.components.StatusBar
 import com.jacj90021.gifanywhere.components.TopBar
+import com.jacj90021.gifanywhere.theme.Typography
 import kotlin.math.roundToInt
 
 @Composable
@@ -126,7 +127,9 @@ fun DiscoverScreen(
                             .height(4.dp)
                             .background(Color.Black, RoundedCornerShape(2.dp))
                             .padding(top = 0.dp, bottom = 10.dp)
-                            .opacity(0.3f),
+                            .graphicsLayer(
+                                alpha = 0.3f
+                            ),
                     )
                     Box(
                         modifier = Modifier
@@ -162,16 +165,15 @@ fun DiscoverScreen(
                                             horizontalAlignment = Alignment.CenterHorizontally,
                                             verticalArrangement = Arrangement.Center,
                                             modifier = Modifier.fillMaxSize(),
-                                        ) {
-                                            Icon(
-                                                imageVector = buildSheetIcon(action.pathData),
-                                                contentDescription = null,
-                                                tint = Color.Black,
-                                                modifier = Modifier.size(18.dp),
-                                            )
+                                        ) {                                                Icon(
+                                                    painter = painterResource(action.iconRes),
+                                                    contentDescription = null,
+                                                    tint = Color.Black,
+                                                    modifier = Modifier.size(18.dp),
+                                                )
                                             Text(
                                                 text = action.label,
-                                                style = androidx.compose.material3.Typography.bodySmall,
+                                                style = Typography.bodySmall,
                                                 color = Color.Black,
                                                 textAlign = TextAlign.Center,
                                             )

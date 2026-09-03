@@ -6,6 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.jacj90021.gifanywhere.R
 
 private val JetBrainsMono = FontFamily(
     Font(R.font.jetbrains_mono, FontWeight.Thin),

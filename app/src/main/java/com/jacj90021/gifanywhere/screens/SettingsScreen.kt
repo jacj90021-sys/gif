@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.PaddingValues
 import com.jacj90021.gifanywhere.components.CardLabel
 import com.jacj90021.gifanywhere.components.ExportDefaultsRow
 import com.jacj90021.gifanywhere.components.SettingsGroup
@@ -46,8 +47,8 @@ fun SettingsScreen(
                     sub = "Quick access overlay",
                     hasToggle = true,
                     toggleOn = true,
-                    onToggle = {},
                 ),
+                onToggle = { },
             )
         }
         Spacer(modifier = Modifier.height(14.dp))
@@ -63,6 +64,7 @@ fun SettingsScreen(
             ExportDefaultsRow(
                 title = "Quality",
                 value = "Auto ›",
+                modifier = Modifier.padding(top = 0.dp),
             )
         }
         Spacer(modifier = Modifier.height(14.dp))
@@ -78,10 +80,12 @@ fun SettingsScreen(
             ExportDefaultsRow(
                 title = "Language",
                 value = "English ›",
+                modifier = Modifier.padding(top = 0.dp),
             )
             ExportDefaultsRow(
                 title = "About / Feedback",
                 value = "›",
+                modifier = Modifier.padding(top = 0.dp),
             )
         }
     }

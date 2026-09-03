@@ -1,4 +1,5 @@
 package com.jacj90021.gifanywhere.components
+import androidx.compose.runtime.Composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -21,13 +23,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Companion
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
@@ -39,15 +41,40 @@ import com.jacj90021.gifanywhere.theme.Typography
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.platform.LocalLayoutDirection
 
+@Composable
+fun SingleToggle(
+    enabled: Boolean,
+    onToggle: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .size(38.dp, 20.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (enabled) BgYellow else InkBlack.copy(alpha = 0.1f))
+            .border(2.dp, InkBlack, RoundedCornerShape(10.dp))
+            .clickable { onToggle() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(
+            modifier = Modifier
+                .offset(x = if (enabled) 19.dp else 1.dp)
+                .size(14.dp, 14.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(InkBlack),
+        )
+    }
+}
+
 data class SourceItem(
+    val iconRes: Int,
     val label: String,
-    val iconPath: String,
 )
 
 data class ToolItem(
+    val iconRes: Int,
     val name: String,
     val sub: String,
-    val iconPath: String,
     val isBig: Boolean = false,
 )
 
@@ -74,7 +101,7 @@ fun SourceRow(
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
-                        imageVector = buildSheetIcon(item.iconPath),
+                        painter = painterResource(item.iconRes),
                         contentDescription = null,
                         tint = InkBlack,
                         modifier = Modifier.size(20.dp),
@@ -144,7 +171,7 @@ private fun ToolCardBig(item: ToolItem) {
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = buildSheetIcon(item.iconPath),
+                    painter = painterResource(item.iconRes),
                     contentDescription = null,
                     tint = InkBlack,
                     modifier = Modifier.size(18.dp),
@@ -193,7 +220,7 @@ private fun ToolCardSmall(item: ToolItem) {
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = buildSheetIcon(item.iconPath),
+                    painter = painterResource(item.iconRes),
                     contentDescription = null,
                     tint = InkBlack,
                     modifier = Modifier.size(18.dp),
