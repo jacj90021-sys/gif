@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,7 +38,6 @@ import com.jacj90021.gifanywhere.components.SingleToggle
 import com.jacj90021.gifanywhere.components.SliderRow
 import com.jacj90021.gifanywhere.components.SourceItem
 import com.jacj90021.gifanywhere.components.SourceRow
-import com.jacj90021.gifanywhere.components.StatusBar
 import com.jacj90021.gifanywhere.components.ToolItem
 import com.jacj90021.gifanywhere.components.ToolsGrid
 import com.jacj90021.gifanywhere.components.TopBar
@@ -53,10 +53,14 @@ fun StudioScreen(
     var batchEnabled by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        StatusBar()
-        Spacer(modifier = Modifier.height(4.dp))
-        TopBar(title = "STUDIO")
-        Spacer(modifier = Modifier.height(4.dp))
+        Column(
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(top = 8.dp),
+        ) {
+            TopBar(title = "STUDIO")
+        }
+        Spacer(modifier = Modifier.height(6.dp))
 
         Column(
             modifier = Modifier

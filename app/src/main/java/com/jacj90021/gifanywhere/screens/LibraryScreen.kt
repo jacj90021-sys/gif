@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -19,7 +20,6 @@ import com.jacj90021.gifanywhere.components.CacheCard
 import com.jacj90021.gifanywhere.components.FolderGrid
 import com.jacj90021.gifanywhere.components.FolderItem
 import com.jacj90021.gifanywhere.components.SegmentedGroup
-import com.jacj90021.gifanywhere.components.StatusBar
 import com.jacj90021.gifanywhere.components.TopBar
 import com.jacj90021.gifanywhere.components.WallGrid
 import com.jacj90021.gifanywhere.components.WallItem
@@ -33,10 +33,14 @@ fun LibraryScreen(
     var selectedWallIndex by remember { mutableIntStateOf(0) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        StatusBar()
-        Spacer(modifier = Modifier.height(4.dp))
-        TopBar(title = "LIBRARY")
-        Spacer(modifier = Modifier.height(4.dp))
+        Column(
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(top = 8.dp),
+        ) {
+            TopBar(title = "LIBRARY")
+        }
+        Spacer(modifier = Modifier.height(6.dp))
         SegmentedGroup(
             options = listOf("Favorites", "Recent", "Creations"),
             selectedIndex = selectedFolderIndex,

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -17,7 +18,6 @@ import com.jacj90021.gifanywhere.components.ExportDefaultsRow
 import com.jacj90021.gifanywhere.components.SettingsGroup
 import com.jacj90021.gifanywhere.components.SetRow
 import com.jacj90021.gifanywhere.components.SetRowItem
-import com.jacj90021.gifanywhere.components.StatusBar
 import com.jacj90021.gifanywhere.components.TopBar
 
 @Composable
@@ -26,10 +26,14 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        StatusBar()
-        Spacer(modifier = Modifier.height(4.dp))
-        TopBar(title = "SETTINGS")
-        Spacer(modifier = Modifier.height(4.dp))
+        Column(
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(top = 8.dp),
+        ) {
+            TopBar(title = "SETTINGS")
+        }
+        Spacer(modifier = Modifier.height(6.dp))
 
         Column(
             modifier = Modifier

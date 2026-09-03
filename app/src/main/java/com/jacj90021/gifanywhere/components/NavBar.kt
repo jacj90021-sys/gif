@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.components.AppIcons
@@ -69,11 +71,15 @@ fun NavBar(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            val haptics = LocalHapticFeedback.current
             tabs.forEach { tab ->
                 val isActive = tab.id == activeId
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.clickable { onTabSelected(tab.id) },
+                    modifier = Modifier.clickable {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onTabSelected(tab.id)
+                    },
                 ) {
                     Box(
                         modifier = Modifier

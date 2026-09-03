@@ -24,6 +24,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -127,6 +129,7 @@ private fun SheetActionCell(
     action: SheetAction,
     onClick: () -> Unit,
 ) {
+    val haptics = LocalHapticFeedback.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
@@ -139,7 +142,10 @@ private fun SheetActionCell(
                     RadiusMd,
                 )
                 .border(2.dp, InkBlack, RadiusMd)
-                .clickable(onClick = onClick),
+                .clickable {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onClick()
+                },
             contentAlignment = Alignment.Center,
         ) {
             Icon(
