@@ -61,21 +61,21 @@ val Sub = TextStyle(
     letterSpacing = 0.sp,
 )
 
-/** 10px 700 — chips, platform chips, source labels, clear-cache. */
+/** 11px 700 — chips, platform chips, source labels, clear-cache. */
 val Bold = TextStyle(
     fontFamily = PlusJakartaSans,
-    fontSize = 10.sp,
+    fontSize = 11.sp,
     fontWeight = FontWeight.Bold,
-    lineHeight = 14.sp,
+    lineHeight = 15.sp,
     letterSpacing = 0.sp,
 )
 
-/** 11px 800 — segmented control options, format chips. */
+/** 12px 800 — segmented control options, format chips. */
 val Extra = TextStyle(
     fontFamily = PlusJakartaSans,
-    fontSize = 11.sp,
+    fontSize = 12.sp,
     fontWeight = FontWeight.ExtraBold,
-    lineHeight = 15.sp,
+    lineHeight = 16.sp,
     letterSpacing = 0.sp,
 )
 

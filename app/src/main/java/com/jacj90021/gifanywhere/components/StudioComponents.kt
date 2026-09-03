@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -272,7 +273,7 @@ fun FormatChips(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(vertical = 7.dp)
+                    .heightIn(min = 40.dp)
                     .background(if (isSelected) InkBlack else CardWhite, RadiusSm)
                     .border(2.dp, InkBlack, RadiusSm)
                     .clickable { onSelected(index) },
@@ -282,6 +283,8 @@ fun FormatChips(
                     text = option,
                     style = Extra,
                     color = if (isSelected) CardWhite else InkBlack,
+                    maxLines = 1,
+                    modifier = Modifier.padding(horizontal = 6.dp),
                 )
             }
         }
