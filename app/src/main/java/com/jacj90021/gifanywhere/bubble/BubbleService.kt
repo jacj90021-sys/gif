@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.jacj90021.gifanywhere.MainActivity
 import com.jacj90021.gifanywhere.R
-import com.jacj90021.gifanywhere.data.Store
 import kotlin.math.abs
 
 /**
@@ -42,6 +41,19 @@ class BubbleService : Service() {
 
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
+    private val prefs by lazy { getSharedPreferences("gif_anywhere", MODE_PRIVATE) }
+
+    private fun bubbleOpacityFraction(): Float = prefs.getInt("bubbleOpacity", 90) / 100f
+    private fun bubbleSide(): String = prefs.getString("bubbleSide", "Right") ?: "Right"
+    private fun bubbleY(): Float = prefs.getFloat("bubbleY", 0.8f)
+
+    private fun persistBubble(side: String, y: Float) {
+        prefs.edit()
+            .putString("bubbleSide", side)
+            .putFloat("bubbleY", y)
+            .apply()
+    }
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
@@ -55,7 +67,7 @@ class BubbleService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        bubbleView?.alpha = Store.bubbleOpacity / 100f
+        bubbleView?.alpha = bubbleOpacityFraction()
         return START_STICKY
     }
 
@@ -71,9 +83,9 @@ class BubbleService : Service() {
 
     @SuppressLint("ClickableViewAccessibility", "RtlHardcoded")
     private fun showBubble() {
-        lastX = if (Store.bubbleSide == "Left") dp(12)
+        lastX = if (bubbleSide() == "Left") dp(12)
         else resources.displayMetrics.widthPixels - dp(58) - dp(12)
-        lastY = (resources.displayMetrics.heightPixels * Store.bubbleY).toInt()
+        lastY = (resources.displayMetrics.heightPixels * bubbleY()).toInt()
             .coerceIn(dp(40), resources.displayMetrics.heightPixels - dp(120))
 
         val view = BubbleView(this, ring = true)
@@ -132,7 +144,7 @@ class BubbleService : Service() {
             .onSuccess {
                 bubbleView = view
                 bubbleParams = params
-                view.alpha = Store.bubbleOpacity / 100f
+                view.alpha = bubbleOpacityFraction()
             }
             .onFailure { stopSelf() }
     }
@@ -146,9 +158,9 @@ class BubbleService : Service() {
         runCatching { wm.updateViewLayout(v, params) }
         lastX = target
         lastY = params.y
-        Store.bubbleSide = if (target < screenW / 2) "Left" else "Right"
-        Store.bubbleY = (params.y.toFloat() / resources.displayMetrics.heightPixels).coerceIn(0.05f, 0.95f)
-        Store.save(applicationContext)
+        val side = if (target < screenW / 2) "Left" else "Right"
+        val y = (params.y.toFloat() / resources.displayMetrics.heightPixels).coerceIn(0.05f, 0.95f)
+        persistBubble(side, y)
     }
 
     /* ---------- expanded petal menu ---------- */
@@ -185,7 +197,7 @@ class BubbleService : Service() {
         menuLp.topMargin = lastY
 
         val center = BubbleView(this, ring = false)
-        center.alpha = Store.bubbleOpacity / 100f
+        center.alpha = bubbleOpacityFraction()
         center.setOnClickListener { collapse() }
         menu.addView(
             center,

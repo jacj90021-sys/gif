@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.inputmethodservice.InputMethodService
 import android.net.Uri
+import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.Gravity
@@ -23,7 +24,13 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.inputmethod.EditorInfoCompat
 import com.jacj90021.gifanywhere.R
-import com.jacj90021.gifanywhere.data.Content
+
+private val kbCategories = listOf("Trending", "Reactions", "Memes", "Anime", "Love", "Sports")
+
+private val kbTiles = listOf(
+    "Excited nod", "Slow clap", "Mind blown", "Victory dance",
+    "Heart burst", "Typing cat", "Facepalm", "Confused math",
+)
 
 /**
  * System-wide GIF keyboard (real InputMethodService).
@@ -40,14 +47,6 @@ class GifKeyboardService : InputMethodService() {
     private var editorSupportsGif = false
 
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
-
-    private fun colorInt(c: androidx.compose.ui.graphics.Color): Int =
-        android.graphics.Color.argb(
-            (c.alpha * 255f).toInt(),
-            (c.red * 255f).toInt(),
-            (c.green * 255f).toInt(),
-            (c.blue * 255f).toInt()
-        )
 
     private fun cardBg(fillHex: String, strokeHex: String, radiusDp: Int, strokeDp: Int): GradientDrawable =
         GradientDrawable().apply {
@@ -88,7 +87,7 @@ class GifKeyboardService : InputMethodService() {
         search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
             override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {
+            override fun afterTextChanged(s: Editable?) {
                 query = s?.toString()?.trim() ?: ""
                 rebuildGrid()
             }
@@ -103,7 +102,7 @@ class GifKeyboardService : InputMethodService() {
         // ---- category chips ----
         val chipScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
         val chipLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        Content.categories.forEachIndexed { i, name ->
+        kbCategories.forEachIndexed { i, name ->
             val chip = TextView(this).apply {
                 text = name
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.5f)
@@ -174,42 +173,44 @@ class GifKeyboardService : InputMethodService() {
         val rowWidth = resources.displayMetrics.widthPixels - dp(28)
         val cell = (rowWidth - 3 * gap) / 4
 
-        val tiles = Content.kbTiles
-            .mapIndexed { i, pair -> Triple(pair.first, pair.second, i % Content.categories.size) }
-            .filter { (name, _, cat) ->
-                (selectedChip == 0 || Content.categories[selectedChip] == Content.categories[cat]) &&
+        val tiles = kbTiles.mapIndexed { i, name -> name to (i % kbCategories.size) }
+            .filter { (name, category) ->
+                (selectedChip == 0 || category == selectedChip) &&
                     (query.isBlank() || name.contains(query, ignoreCase = true))
             }
 
-        tiles.forEach { (name, gradIdx, _) ->
+        tiles.forEach { (name, _) ->
             val cellView = FrameLayout(this)
             cellView.background = GradientDrawable().apply {
-                orientation = GradientDrawable.Orientation.TL_BR
-                val g = Content.grads[gradIdx % Content.grads.size]
-                colors = intArrayOf(colorInt(g.first), colorInt(g.second))
+                shape = GradientDrawable.RECTANGLE
                 cornerRadius = dp(9).toFloat()
+                setColor(Color.parseColor("#FFFFFF"))
+                setStroke(dp(1), Color.parseColor("#2B2B29"))
             }
             cellView.setOnClickListener { insertGif(name) }
 
             val label = TextView(this).apply {
                 text = name
-                setTextColor(Color.parseColor("#FAFAF5"))
+                setTextColor(Color.parseColor("#0A0A0A"))
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f)
                 typeface = ResourcesCompat.getFont(this@GifKeyboardService, R.font.inter_700)
                 setPadding(dp(4), 0, dp(4), dp(3))
             }
             cellView.addView(
                 label,
-                FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM or Gravity.START)
+                FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM or Gravity.START,
+                )
             )
 
             val lp = GridLayout.LayoutParams()
             lp.width = cell
             lp.height = cell
             lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            val glp = GridLayout.LayoutParams(lp)
-            glp.setMargins(gap / 2, gap / 2, gap / 2, gap / 2)
-            grid.addView(cellView, glp)
+            lp.setMargins(gap / 2, gap / 2, gap / 2, gap / 2)
+            grid.addView(cellView, lp)
         }
     }
 

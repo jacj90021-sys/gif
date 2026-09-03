@@ -11,14 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jacj90021.gifanywhere.R
 import com.jacj90021.gifanywhere.theme.BgYellow
+import com.jacj90021.gifanywhere.theme.Headline
+import com.jacj90021.gifanywhere.theme.HeadlineSm
 import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.MonoTag
 
@@ -29,18 +26,17 @@ fun TopBar(
     fontSizeSp: Int = 24,
     modifier: Modifier = Modifier,
 ) {
+    val titleStyle = when (fontSizeSp) {
+        18 -> HeadlineSm
+        else -> Headline
+    }
     Row(
         modifier = modifier.padding(horizontal = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "$title.",
-            style = TextStyle(
-                fontFamily = FontFamily(Font(R.font.plus_jakarta_sans, FontWeight.ExtraBold)),
-                fontSize = fontSizeSp.sp,
-                fontWeight = FontWeight.ExtraBold,
-                letterSpacing = (-0.5).sp,
-            ),
+            style = titleStyle,
             color = InkBlack,
         )
         if (tag != null) {

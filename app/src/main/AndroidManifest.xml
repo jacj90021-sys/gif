@@ -26,11 +26,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".OnboardingActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
-
         <service
             android:name=".bubble.BubbleService"
             android:exported="false" />

@@ -1,9 +1,9 @@
 package com.jacj90021.gifanywhere.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,8 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.components.AppIcons
@@ -41,9 +37,13 @@ import com.jacj90021.gifanywhere.components.SourceRow
 import com.jacj90021.gifanywhere.components.ToolItem
 import com.jacj90021.gifanywhere.components.ToolsGrid
 import com.jacj90021.gifanywhere.components.TopBar
+import com.jacj90021.gifanywhere.theme.BgYellow
 import com.jacj90021.gifanywhere.theme.Button
 import com.jacj90021.gifanywhere.theme.CardWhite
+import com.jacj90021.gifanywhere.theme.InkBlack
+import com.jacj90021.gifanywhere.theme.InkMuted
 import com.jacj90021.gifanywhere.theme.MonoLabel
+import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.Title
 import com.jacj90021.gifanywhere.theme.hardShadow
 
@@ -99,7 +99,7 @@ fun StudioScreen(
                     Text(
                         text = "EXPORT FORMAT",
                         style = MonoLabel,
-                        color = Color(0xFF555555),
+                        color = InkMuted,
                         modifier = Modifier.padding(bottom = 8.dp),
                     )
                     FormatChips(
@@ -111,7 +111,7 @@ fun StudioScreen(
                     Text(
                         text = "PLATFORM PRESET",
                         style = MonoLabel,
-                        color = Color(0xFF555555),
+                        color = InkMuted,
                         modifier = Modifier.padding(bottom = 2.dp),
                     )
                     PlatformChips(
@@ -133,20 +133,23 @@ fun StudioScreen(
                         fillPercent = 0.6f,
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    Row(
+                    // Divider, then the Batch Export row (mockup's dashed border-top)
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp)
-                            .clip(RoundedCornerShape(0.dp))
-                            .background(Color.Transparent)
-                            .border(1.5.dp, Color.Black.copy(alpha = 0.12f), RoundedCornerShape(0.dp)),
+                            .height(1.dp)
+                            .background(InkBlack.copy(alpha = 0.12f)),
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = "Batch Export",
                             style = Title,
-                            color = Color.Black,
+                            color = InkBlack,
                         )
                         SingleToggle(
                             enabled = batchEnabled,
@@ -162,16 +165,15 @@ fun StudioScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp, vertical = 6.dp)
-                    .hardShadow(RoundedCornerShape(12.dp), color = CardWhite)
-                    .clip(RoundedCornerShape(12.dp))
+                    .hardShadow(RadiusMd, color = CardWhite)
                     .clickable { },
-                color = Color.Black,
-                shape = RoundedCornerShape(12.dp),
+                color = InkBlack,
+                shape = RadiusMd,
             ) {
                 Text(
                     text = "EXPORT GIF →",
                     style = Button,
-                    color = Color(0xFFFFD600),
+                    color = BgYellow,
                     modifier = Modifier.padding(vertical = 14.dp),
                     textAlign = TextAlign.Center,
                 )
