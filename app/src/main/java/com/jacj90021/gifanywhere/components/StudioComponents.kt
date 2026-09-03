@@ -43,6 +43,7 @@ import com.jacj90021.gifanywhere.theme.RadiusSm
 import com.jacj90021.gifanywhere.theme.Slider
 import com.jacj90021.gifanywhere.theme.Sub
 import com.jacj90021.gifanywhere.theme.Title
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 @Composable
 fun SingleToggle(
@@ -99,6 +100,7 @@ fun SourceRow(
                 Box(
                     modifier = Modifier
                         .size(50.dp)
+                        .hardShadow(RadiusMd)
                         .background(CardWhite, RadiusMd)
                         .border(2.dp, InkBlack, RadiusMd),
                     contentAlignment = Alignment.Center,
@@ -163,6 +165,7 @@ private fun ToolCardBig(item: ToolItem) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .hardShadow(RadiusMd)
             .border(2.dp, InkBlack, RadiusMd),
         color = CardWhite,
         shape = RadiusMd,
@@ -210,6 +213,7 @@ private fun ToolCardSmall(item: ToolItem) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .hardShadow(RadiusMd)
             .border(2.dp, InkBlack, RadiusMd),
         color = CardWhite,
         shape = RadiusMd,

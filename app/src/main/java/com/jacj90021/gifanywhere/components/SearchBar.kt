@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.Search
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 @Composable
 fun SearchBar(
@@ -33,6 +34,7 @@ fun SearchBar(
 ) {
     Row(
         modifier = modifier
+            .hardShadow(RoundedCornerShape(12.dp))
             .background(CardWhite, RoundedCornerShape(12.dp))
             .border(2.dp, InkBlack, RoundedCornerShape(12.dp))
             .padding(horizontal = 12.dp, vertical = 10.dp),

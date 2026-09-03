@@ -35,6 +35,7 @@ import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusSm
 import com.jacj90021.gifanywhere.theme.Title
 import com.jacj90021.gifanywhere.theme.Wall
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 @Composable
 fun BoxCard(
@@ -45,6 +46,7 @@ fun BoxCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 18.dp, vertical = 12.dp)
+            .hardShadow(RadiusLg)
             .border(2.dp, InkBlack, RadiusLg),
         color = CardWhite,
         shape = RadiusLg,
@@ -97,6 +99,7 @@ private fun FolderCard(item: FolderItem) {
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
+            .hardShadow(RadiusMd)
             .border(2.dp, InkBlack, RadiusMd),
         color = CardWhite,
         shape = RadiusMd,
@@ -164,6 +167,7 @@ private fun WallCell(item: WallItem) {
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(9f / 16f)
+            .hardShadow(RadiusSm, offset = 2.dp)
             .background(CardWhite, RadiusSm)
             .border(2.dp, InkBlack, RadiusSm),
     ) {

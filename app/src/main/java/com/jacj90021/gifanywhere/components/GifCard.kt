@@ -26,6 +26,7 @@ import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.MonoBadge
 import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusSm
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 @Composable
 fun GifCard(
@@ -37,6 +38,7 @@ fun GifCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .hardShadow(RadiusMd)
             .clip(RadiusMd)
             .background(CardWhite)
             .border(2.dp, InkBlack, RadiusMd)

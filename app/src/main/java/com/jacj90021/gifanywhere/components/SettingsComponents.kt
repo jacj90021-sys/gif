@@ -33,6 +33,7 @@ import com.jacj90021.gifanywhere.theme.MonoValMuted
 import com.jacj90021.gifanywhere.theme.RadiusLg
 import com.jacj90021.gifanywhere.theme.Sub
 import com.jacj90021.gifanywhere.theme.Title
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 data class SetRowItem(
     val title: String,
@@ -52,6 +53,7 @@ fun SettingsGroup(
     Surface(
         modifier = modifier
             .fillMaxWidth()
+            .hardShadow(RadiusLg)
             .border(2.dp, InkBlack, RadiusLg),
         color = CardWhite,
         shape = RadiusLg,

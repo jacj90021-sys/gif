@@ -36,6 +36,7 @@ import com.jacj90021.gifanywhere.theme.InkMuted
 import com.jacj90021.gifanywhere.theme.RadiusMd
 import com.jacj90021.gifanywhere.theme.RadiusSheet
 import com.jacj90021.gifanywhere.theme.Sheet
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 data class SheetAction(
     val label: String,
@@ -137,6 +138,7 @@ private fun SheetActionCell(
         Box(
             modifier = Modifier
                 .size(44.dp)
+                .hardShadow(RadiusMd, offset = 2.dp)
                 .background(
                     if (action.isPrimary) BgYellow else CardWhite,
                     RadiusMd,

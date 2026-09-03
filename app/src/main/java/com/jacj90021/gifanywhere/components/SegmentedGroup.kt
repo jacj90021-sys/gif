@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.Extra
 import com.jacj90021.gifanywhere.theme.InkBlack
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 @Composable
 fun SegmentedGroup(
@@ -40,6 +41,13 @@ fun SegmentedGroup(
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 8.dp)
+                    .then(
+                        if (isSelected) {
+                            Modifier.hardShadow(RoundedCornerShape(8.dp), offset = 2.dp)
+                        } else {
+                            Modifier
+                        },
+                    )
                     .background(
                         if (isSelected) CardWhite else Color.Transparent,
                         RoundedCornerShape(8.dp),
@@ -55,7 +63,7 @@ fun SegmentedGroup(
                 Text(
                     text = option.uppercase(),
                     style = Extra,
-                    color = if (isSelected) InkBlack else InkBlack.copy(alpha = 0.65f),
+                    color = InkBlack,
                     maxLines = 1,
                     overflow = TextOverflow.Visible,
                 )

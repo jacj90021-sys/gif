@@ -42,8 +42,10 @@ import com.jacj90021.gifanywhere.components.ToolItem
 import com.jacj90021.gifanywhere.components.ToolsGrid
 import com.jacj90021.gifanywhere.components.TopBar
 import com.jacj90021.gifanywhere.theme.Button
+import com.jacj90021.gifanywhere.theme.CardWhite
 import com.jacj90021.gifanywhere.theme.MonoLabel
 import com.jacj90021.gifanywhere.theme.Title
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 @Composable
 fun StudioScreen(
@@ -159,7 +161,8 @@ fun StudioScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 18.dp)
+                    .padding(horizontal = 18.dp, vertical = 6.dp)
+                    .hardShadow(RoundedCornerShape(12.dp), color = CardWhite)
                     .clip(RoundedCornerShape(12.dp))
                     .clickable { },
                 color = Color.Black,

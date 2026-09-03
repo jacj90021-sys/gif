@@ -29,6 +29,7 @@ import com.jacj90021.gifanywhere.theme.InkBlack
 import com.jacj90021.gifanywhere.theme.InkMuted
 import com.jacj90021.gifanywhere.theme.MonoNav
 import com.jacj90021.gifanywhere.theme.RadiusSm
+import com.jacj90021.gifanywhere.theme.hardShadow
 
 private data class TabItem(
     val id: String,
@@ -83,6 +84,9 @@ fun NavBar(
                     Box(
                         modifier = Modifier
                             .size(34.dp)
+                            .then(
+                                if (isActive) Modifier.hardShadow(RadiusSm, offset = 2.dp) else Modifier,
+                            )
                             .background(
                                 if (isActive) BgYellow else Color.Transparent,
                                 RadiusSm,
